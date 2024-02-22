@@ -8,19 +8,15 @@ import { SessionProvider } from '../auth/ctx';
 import { useColorScheme } from '@/src/components/useColorScheme';
 import { useState } from 'react';
 import { useSession } from '../auth/ctx';
-import LoginScreen from './(screens)/LoginScreen';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
-import Colors from '../constants/Colors';
-
+import Colors from '@/constants/Colors';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
-export const unstable_settings = {
-  initialRouteName: "LoginScreen", // Nome da tela inicial
-};
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -68,16 +64,19 @@ function RootLayoutNav() {
       <SafeAreaProvider>
         <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          {!sessionReconfigure ? (
-         
-            <Stack>
-            <Stack.Screen name="(screens)" options={{ headerShown: false }}  />
-         </Stack>
+          {sessionReconfigure ? (
+            <SessionProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           
+              </Stack>
+            </SessionProvider>
           ) : (
-            
-            <></>
-           
+            <SessionProvider>
+            <Stack>
+               <Stack.Screen name="(screens)" options={{ headerShown: false }}  />
+            </Stack>
+            </SessionProvider>
            
           )}
           </ThemeProvider>

@@ -5,8 +5,8 @@ import { Stack } from 'expo-router'
 const _layoutScreens = () => {
   return (
     <Stack>
-          <Stack.Screen name="LoginScreen" options={{ headerShown: false }}  />
-        <Stack.Screen name="CameraScreen" options={{ headerShown: false }}  />
+          <Stack.Screen name="index" options={{ headerShown: false, headerTitle: 'Início' }}  />
+        <Stack.Screen name="CameraScreen" options={{headerTitle: 'Sua Câmera'}}  />
          
          
     </Stack>

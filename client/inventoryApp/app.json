@@ -37,9 +37,7 @@
       "typedRoutes": true
     }
   
-  },
-  "unstable_settings": {
-    "initialRouteName": "LoginScreen"
   }
+
   
 }

@@ -10,7 +10,7 @@ export default function MenuButtons() {
       <MyButton title={'Cadastrar'}/>
       <MyButton 
         title= {'Entrar'}
-        route = {'/CameraScreen'}
+        route = {'CameraScreen'}
       />
     </View>
   )
