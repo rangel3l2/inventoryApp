@@ -1,19 +1,21 @@
 import React from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import { useColorScheme } from '@/src/components/useColorScheme';
-import { Link } from 'expo-router';
 import Colors from '../../constants/Colors';
+import { useRouter } from 'expo-router';
+
 export default function MyButton(props : any) {
-  const { route = '/NotFoundScreen', title = 'Save', style = '' } = props;
+  const { route = '/NotFoundScreen', title = 'Save', style = '', handlePress } = props;
   const colorScheme = useColorScheme()
   const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
+  const navigation = useRouter()
+  const handleRoute = () =>{
+    navigation.navigate(route)
+  } 
   return (
-    <Link href={route} asChild style={[styles.button,{backgroundColor : themeColors.secundary, },style]}>
-    <Pressable  >
-        
+    <Pressable  onPress={handleRoute} style={[styles.button,{backgroundColor : themeColors.secundary, },style]} >
       <Text style={[styles.text, {color: themeColors.text}]}>{title}</Text>
     </Pressable>
-    </Link>
   );
 }
 

@@ -3,12 +3,15 @@ import { Text, View, StyleSheet, Button, Dimensions, TextInput, Pressable } from
 import { CameraView, Camera } from "expo-camera/next";
 import MyButton from "@/src/components/MyButton";
 const { width, height } = Dimensions.get('window');
+import { useSession } from "@/src/auth/ctx";
+import { useRouter } from 'expo-router';
 
 export default function CameraScreen(props :any) {
-  const {route = '/NotFoundScreen'} = props
+  const navigation = useRouter()
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [scanned, setScanned] = useState(false);
 
+  const {signIn} = useSession()
   useEffect(() => {
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -19,8 +22,13 @@ export default function CameraScreen(props :any) {
   }, []);
 
   const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    setScanned(true); 
+    
+    handleSignIn(data)
+    if(data){
+      navigation.navigate('(tabs)')
+    }
+  
   };
 
   if (hasPermission === null) {
@@ -29,7 +37,14 @@ export default function CameraScreen(props :any) {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-
+  const handleSignIn = async (data : string) => {
+    const result = await signIn(data);
+    if (result.success) {
+      console.log('Autenticação bem-sucedida. Nome de usuário:', result.username);
+    } else {
+      console.error('Falha na autenticação. Erro:', result.error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Aproxime o código de barras</Text>
@@ -39,7 +54,7 @@ export default function CameraScreen(props :any) {
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
         barcodeScannerSettings={{
           barcodeTypes: [
-            "qr",          
+                    
             "code128",        
           
           ],
@@ -47,9 +62,10 @@ export default function CameraScreen(props :any) {
       />
      <MyButton
      style = {styles.input}
-     title = 'Código de Barras'/>
+     title = 'Código de Barras'
+     route = 'BarCodeWriting'/>
       <View style={styles.targetRectangle} />
-      {scanned && <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />}
+      {scanned && <Button title={"Pressione para escanear novamente"} onPress={() => setScanned(false)} />}
     </View>
   );
 }
@@ -78,7 +94,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
     width: 200,
-    height: height / 1.23, // Height of the rectangle
+    height: height / 1.25, // Height of the rectangle
     borderRadius: 10, // Border radius for rounded corners
     margin: 20, // Margin around the rectangle
     top: 0,

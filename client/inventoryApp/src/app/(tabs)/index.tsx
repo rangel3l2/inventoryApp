@@ -1,12 +1,18 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { Stack, useNavigation } from 'expo-router';
+import { useEffect } from 'react';
+import { Text, View } from 'react-native';
 
-const index = () => {
+
+export default function Home() {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   return (
-    <View>
-      <Text>index</Text>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
     </View>
-  )
+  );
 }
-
-export default index

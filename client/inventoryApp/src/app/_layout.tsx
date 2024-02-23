@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useNavigation } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { SessionProvider } from '../auth/ctx';
@@ -11,6 +11,8 @@ import { useSession } from '../auth/ctx';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
 import Colors from '@/constants/Colors';
+
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -22,7 +24,7 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-
+  
   const [loaded, error] = useFonts({
     SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
@@ -47,6 +49,7 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+
   const [sessionReconfigure, setSessionReconfigure] = useState(false)
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
@@ -59,6 +62,7 @@ function RootLayoutNav() {
       setSessionReconfigure(true)
     }
   }),[]
+
   return (
   
       <SafeAreaProvider>
@@ -66,10 +70,13 @@ function RootLayoutNav() {
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           {sessionReconfigure ? (
             <SessionProvider>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          
-              </Stack>
+                 <Stack>
+      <Stack.Screen
+        name="(tabs)"
+        options={{ headerShown: false }} // Hide header for this screen
+      />
+      {/* Repeat for other screens where headers should be hidden */}
+    </Stack>
             </SessionProvider>
           ) : (
             <SessionProvider>
@@ -84,6 +91,7 @@ function RootLayoutNav() {
       </SafeAreaProvider>
   
   );
+
 }
 
 const styles = StyleSheet.create({
