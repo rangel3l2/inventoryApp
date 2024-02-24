@@ -20,7 +20,8 @@ export default function BarcodeLogin() {
     const result = await signIn(barcode);
     if (result.success) {
       console.log('Autenticação bem-sucedida. Nome de usuário:', result.username, result.success);
-      navigation.navigate('(tabs)')
+      navigation.push('/')
+      
     } else {
       console.error('Falha na autenticação. Erro:', result.error);
     }

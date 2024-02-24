@@ -3,34 +3,22 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack, useNavigation } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SessionProvider } from '../auth/ctx';
 import { useColorScheme } from '@/src/components/useColorScheme';
-import { useState } from 'react';
 import { useSession } from '../auth/ctx';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
 import Colors from '@/constants/Colors';
-
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+import { useRouter } from 'expo-router';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  
   const [loaded, error] = useFonts({
     SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -45,58 +33,42 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <SessionProvider>
+      <RootLayoutNav />
+    </SessionProvider>
+  );
 }
 
 function RootLayoutNav() {
-
-  const [sessionReconfigure, setSessionReconfigure] = useState(false)
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
   const { session } = useSession();
-  
-  useEffect(()=>{
-    if(session === null){
-      setSessionReconfigure(false)
-    }else{
-      setSessionReconfigure(true)
+  const navigation = useRouter()
+  useEffect(() => {
+    if (session) {
+    
+      navigation.navigate('(tabs)');
     }
-  }),[]
+  }, [session, navigation]);
+
+  const initialScreenName = '(login)';
 
   return (
-  
-      <SafeAreaProvider>
-        <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
+    <SafeAreaProvider>
+      <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          {sessionReconfigure ? (
-            <SessionProvider>
-                 <Stack>
-      <Stack.Screen
-        name="(tabs)"
-        options={{ headerShown: false }} // Hide header for this screen
-      />
-      {/* Repeat for other screens where headers should be hidden */}
-    </Stack>
-            </SessionProvider>
-          ) : (
-            <SessionProvider>
-            <Stack>
-               <Stack.Screen name="(screens)" options={{ headerShown: false }}  />
-            </Stack>
-            </SessionProvider>
-           
-          )}
-          </ThemeProvider>
-        </SafeAreaView>
-      </SafeAreaProvider>
-  
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name={initialScreenName} />
+          </Stack>
+        </ThemeProvider>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
-
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
   },
 });

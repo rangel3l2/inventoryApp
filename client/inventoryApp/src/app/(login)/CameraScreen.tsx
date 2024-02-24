@@ -11,13 +11,12 @@ export default function CameraScreen(props :any) {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [scanned, setScanned] = useState(false);
 
-  const {signIn} = useSession()
+  const {signIn, session} = useSession()
   useEffect(() => {
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
-
     getCameraPermissions();
   }, []);
 
@@ -25,9 +24,11 @@ export default function CameraScreen(props :any) {
     setScanned(true); 
     
     handleSignIn(data)
-    if(data){
-      navigation.navigate('(tabs)')
-    }
+    if (session) {
+      navigation.push('/');
+    
+    
+  };
   
   };
 
@@ -62,8 +63,9 @@ export default function CameraScreen(props :any) {
       />
      <MyButton
      style = {styles.input}
-     title = 'Código de Barras'
+     title = 'Digite Código'
      route = 'BarCodeWriting'/>
+     
       <View style={styles.targetRectangle} />
       {scanned && <Button title={"Pressione para escanear novamente"} onPress={() => setScanned(false)} />}
     </View>

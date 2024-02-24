@@ -22,14 +22,13 @@ export function useSession() {
   return value;
 }
 
-export function SessionProvider(props: React.PropsWithChildren) {
+export function SessionProvider(props: React.PropsWithChildren) { 
   const [[isLoading, session], setSession] = useStorageState('session');
 
-  const signIn = async (barcode: string) => {
-    console.log(barcode)
+  const signIn = async (barcode: string) => {   
     
     try {
-      const response = await axios.post('http://192.168.0.110:5000/auth', {
+      const response = await axios.post('http://192.168.101.12:5000/auth', {
         barcode,
       });
 
