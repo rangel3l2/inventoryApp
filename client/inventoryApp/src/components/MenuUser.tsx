@@ -7,7 +7,7 @@ export default function MenuButtons() {
 
   return (
     <View style = {styles.container}>
-      <MyButton title={'Cadastrar'}/>
+      
       <MyButton 
         title= {'Entrar'}
         route = {'CameraScreen'}

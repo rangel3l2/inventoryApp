@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useNavigation } from 'expo-router';
+import { Slot, Stack, useNavigation } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { SessionProvider } from '../auth/ctx';
@@ -9,11 +9,19 @@ import { useColorScheme } from '@/src/components/useColorScheme';
 import { useSession } from '../auth/ctx';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
-import Colors from '@/constants/Colors';
+import Colors, {ColorScheme} from '@/constants/Colors';
 import { useRouter } from 'expo-router';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const navigation = useRouter();
+  const { session } = useSession();
+  const [initialScreenName, setInitialScreenName] = useState<string>(() => {
+    return session ? '(tabs)' : '(login)';
+  });
+
+ 
+
   const [loaded, error] = useFonts({
     SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
@@ -33,34 +41,54 @@ export default function RootLayout() {
     return null;
   }
 
+
   return (
     <SessionProvider>
-      <RootLayoutNav />
+      <RootLayoutNav 
+      initialScreenName = {initialScreenName}
+      setInitialScreenName = {setInitialScreenName}
+      />
     </SessionProvider>
   );
 }
+type propsRootLayoutNav = {
+  initialScreenName : string
+  setInitialScreenName: React.Dispatch<React.SetStateAction<string>>;
+}
+function RootLayoutNav({initialScreenName, setInitialScreenName}: propsRootLayoutNav) {
+  
 
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
-  const { session } = useSession();
+type ColorScheme = 'light' | 'dark';
+
+const colorScheme: ColorScheme = useColorScheme() || 'light';
   const navigation = useRouter()
+  const { session } = useSession();
+
+  
   useEffect(() => {
+      console.log(session, 'tentativa 20')
     if (session) {
-    
+      
       navigation.navigate('(tabs)');
+    } else {
+      navigation.replace('/(login)');
     }
   }, [session, navigation]);
 
-  const initialScreenName = '(login)';
+
+  // Use a custom hook to manage initialScreenName
+ 
+  
+
+  const theme = colorScheme === 'dark' ? DarkTheme : DefaultTheme;
+  const backgroundColor = colorScheme === 'light' ? Colors.light.background: Colors.dark.background;
+
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name={initialScreenName} />
-          </Stack>
+      <SafeAreaView style={[styles.container, { backgroundColor : backgroundColor }]}>
+      <ThemeProvider value={{ ...theme, colors: Colors[colorScheme ?? 'light'] }}>
+         <Slot></Slot>
         </ThemeProvider>
       </SafeAreaView>
     </SafeAreaProvider>

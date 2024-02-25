@@ -1,5 +1,22 @@
-import React from 'react';
-import RootLayout from './_layout'; // Import the layout
-import { registerRootComponent } from 'expo';
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { Redirect } from 'expo-router'
+import { SessionProvider, useSession } from '../auth/ctx'
 
-registerRootComponent(RootLayout); // Register the layout as the root
+const index = () => {
+    const {session} = useSession()
+    console.log(session)
+  return (
+    <>
+    {session ? (
+        <Redirect href="/(tabs)/" />
+      ) : (
+        <Redirect href="/(login)/" />
+      )}
+      </>
+  )
+}
+
+export default index
+
+const styles = StyleSheet.create({})

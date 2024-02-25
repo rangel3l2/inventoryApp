@@ -26,7 +26,7 @@ export default function TabLayout() {
        
         headerShown: false,
       }}>
-       <Tabs.Screen name= 'index' options={{title : 'Inicio'}}  />
+       <Tabs.Screen name= 'index' options={{title : 'Inicio' }}  />
       <Tabs.Screen name= 'Profile'/>
      
      

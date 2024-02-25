@@ -25,7 +25,7 @@ export default function CameraScreen(props :any) {
     
     handleSignIn(data)
     if (session) {
-      navigation.push('/');
+      navigation.replace('/');
     
     
   };

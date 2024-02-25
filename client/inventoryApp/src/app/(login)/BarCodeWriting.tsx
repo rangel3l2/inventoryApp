@@ -20,7 +20,8 @@ export default function BarcodeLogin() {
     const result = await signIn(barcode);
     if (result.success) {
       console.log('Autenticação bem-sucedida. Nome de usuário:', result.username, result.success);
-      navigation.push('/')
+    
+      navigation.replace('/')
       
     } else {
       console.error('Falha na autenticação. Erro:', result.error);
@@ -28,7 +29,7 @@ export default function BarcodeLogin() {
   };
 
   return (
-    <View style = {[styles.container, { backgroundColor: themeColors.secundary }]}>
+    <View style = {[styles.container, {  }]}>
       <TextInput 
         
         style={styles.input}
@@ -37,16 +38,14 @@ export default function BarcodeLogin() {
         keyboardType='numeric'
         value={barcode}
       />
-      <Pressable
-      style = {[styles.button,{backgroundColor : themeColors.background}]}
-      onPress = {handleSignIn}
-      >
-      <Text style = {
-        styles.text
-      }>Entrar</Text>
+      <MyButton
+      title = {'Entrar'}
+      handlePress  = {handleSignIn}
+       />
+   
       
       
-      </Pressable>
+      
     </View>
   );
 }

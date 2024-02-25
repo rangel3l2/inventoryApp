@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { useStorageState } from './expo-secure-storage';
+import * as SecureStore from 'expo-secure-store';
+import { useRouter } from 'expo-router';
 
 const AuthContext = React.createContext<{
   signIn: (barcode: string) => Promise<{ success: boolean; username?: string; error?: string }>;
@@ -24,11 +26,11 @@ export function useSession() {
 
 export function SessionProvider(props: React.PropsWithChildren) { 
   const [[isLoading, session], setSession] = useStorageState('session');
-
+  const navigation = useRouter()
   const signIn = async (barcode: string) => {   
     
     try {
-      const response = await axios.post('http://192.168.101.12:5000/auth', {
+      const response = await axios.post('http://192.168.1.105:5000/auth', {
         barcode,
       });
 
@@ -49,9 +51,12 @@ export function SessionProvider(props: React.PropsWithChildren) {
     }
   };
 
-  const signOut = () => {
+async function signOut()  {
+ 
+
     // Realize a lógica de saída, se necessário
     setSession(null);
+    navigation.replace('/(login)/');
   };
 
   return (
