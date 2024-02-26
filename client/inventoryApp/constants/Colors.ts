@@ -1,4 +1,4 @@
-const tintColorLight: string = '#2f95dc';
+const tintColorLight: string = '#184a01';
 const tintColorDark: string = '#000';
 
 export type ColorScheme = {
@@ -22,24 +22,24 @@ type ColorObject = {
 const Colors: ColorObject = {
   light: {
     text: '#fff',
-    primary: '#fffff',
+    primary: '#000000',
     card: '#0000',
     secundary: '#0f711f',
     background: '#d7f5d7',
     tint: tintColorLight,
-    tabIconDefault: '#ccc',
+    tabIconDefault: '#000',
     tabIconSelected: tintColorLight,
     border: '#0000',
     notification: '#0000',
   },
   dark: {
     text: '#000',
-    primary: '#ffff',
+    primary: '#ffffff',
     card: '#0000',
     secundary: '#d7f5d7',
     background: '#0f711f',
     tint: tintColorDark,
-    tabIconDefault: '#ccc',
+    tabIconDefault: '#fff',
     tabIconSelected: tintColorDark,
     border: '#0000',
     notification: '#0000',

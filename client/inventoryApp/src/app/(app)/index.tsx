@@ -1,7 +1,6 @@
-import { Stack, useNavigation } from 'expo-router';
-import { useEffect } from 'react';
-import { Text, View } from 'react-native';
-
+import { Stack, useNavigation } from "expo-router";
+import { useEffect } from "react";
+import { Text, View } from "react-native";
 
 export default function Home() {
   const navigation = useNavigation();
@@ -11,7 +10,7 @@ export default function Home() {
   }, [navigation]);
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Home Screen</Text>
     </View>
   );

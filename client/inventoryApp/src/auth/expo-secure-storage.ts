@@ -1,7 +1,7 @@
-import * as SecureStore from 'expo-secure-store';
 import * as React from 'react';
 import { Platform } from 'react-native';
-
+import * as SecureStore from 'expo-secure-store';
+import { Session } from '../model/Session';
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
@@ -14,13 +14,13 @@ function useAsyncState<T>(
   ) as UseStateHook<T>;
 }
 
-export async function setStorageItemAsync(key: string, value: string | null) {
+export async function setStorageItemAsync(key: string, value: Session | null) {
   if (Platform.OS === 'web') {
     try {
       if (value === null) {
         localStorage.removeItem(key);
       } else {
-        localStorage.setItem(key, value);
+        localStorage.setItem(key, JSON.stringify(value));
       }
     } catch (e) {
       console.error('Local storage is unavailable:', e);
@@ -29,35 +29,46 @@ export async function setStorageItemAsync(key: string, value: string | null) {
     if (value == null) {
       await SecureStore.deleteItemAsync(key);
     } else {
-      await SecureStore.setItemAsync(key, value);
+      await SecureStore.setItemAsync(key, JSON.stringify(value));
     }
   }
 }
 
-export function useStorageState(key: string): UseStateHook<string> {
+export function useStorageState(key: string): UseStateHook<Session> {
   // Public
-  const [state, setState] = useAsyncState<string>();
+  const [state, setState] = useAsyncState<Session>([true, null]);
 
   // Get
   React.useEffect(() => {
     if (Platform.OS === 'web') {
       try {
         if (typeof localStorage !== 'undefined') {
-          setState(localStorage.getItem(key));
+          const item = localStorage.getItem(key);
+          if (item) {
+            setState(JSON.parse(item)); // Convertendo o item do local storage de volta para o tipo Session
+          }
         }
       } catch (e) {
         console.error('Local storage is unavailable:', e);
       }
     } else {
       SecureStore.getItemAsync(key).then(value => {
-        setState(value);
+        
+        if (value) {
+          try {
+            
+            setState(JSON.parse(value)); // Convertendo o item do secure store de volta para o tipo Session
+          } catch (error) {
+            console.error('Error parsing JSON from secure store:', error);
+          }
+        }
       });
     }
   }, [key]);
 
   // Set
   const setValue = React.useCallback(
-    (value: string | null) => {
+    (value: Session | null) => {
       setState(value);
       setStorageItemAsync(key, value);
     },

@@ -1,22 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { Redirect } from 'expo-router'
-import { SessionProvider, useSession } from '../auth/ctx'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Redirect } from "expo-router";
+import { SessionProvider, useSession } from "../auth/ctx";
 
 const index = () => {
-    const {session} = useSession()
-    console.log(session)
+  const { session } = useSession();
+  console.log(session);
   return (
-    <>
-    {session ? (
-        <Redirect href="/(tabs)/" />
-      ) : (
-        <Redirect href="/(login)/" />
-      )}
-      </>
-  )
-}
+    <>{session ? <Redirect href="/(app)/" /> : <Redirect href="/(login)/" />}</>
+  );
+};
 
-export default index
+export default index;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
