@@ -5,8 +5,6 @@ import {
   StyleSheet,
   Button,
   Dimensions,
-  TextInput,
-  Pressable,
 } from "react-native";
 import { CameraView, Camera } from "expo-camera/next";
 import MyButton from "@/src/components/MyButton";
@@ -18,14 +16,26 @@ export default function CameraScreen(props: any) {
   const navigation = useRouter();
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [scanned, setScanned] = useState(false);
-
+  
   const { signIn, session } = useSession();
+
   useEffect(() => {
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
     getCameraPermissions();
+
+    // Definindo um temporizador para alterar a variável scanned após 5 segundos
+    const timer = setTimeout(() => {
+      setScanned(true);
+      if (!session) {
+        navigation.back(); // Navegação de volta após 5 segundos
+      }
+    }, 15000);
+
+    // Limpando o temporizador ao desmontar o componente
+    return () => clearTimeout(timer);
   }, []);
 
   const handleBarCodeScanned = ({
@@ -36,7 +46,6 @@ export default function CameraScreen(props: any) {
     data: string;
   }) => {
     setScanned(true);
-
     handleSignIn(data);
     if (session) {
       navigation.replace("/");
@@ -57,9 +66,10 @@ export default function CameraScreen(props: any) {
         result.username
       );
     } else {
-      console.error("Falha na autenticação. Erro:", result.error);
+      navigation.push({ pathname: "/(components)/errorModal", params: { title: " Error" } });
     }
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Aproxime o código de barras</Text>

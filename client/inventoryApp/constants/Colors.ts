@@ -22,7 +22,7 @@ type ColorObject = {
 const Colors: ColorObject = {
   light: {
     text: '#fff',
-    primary: '#000000',
+    primary: '#0f711f',
     card: '#0000',
     secundary: '#0f711f',
     background: '#d7f5d7',
@@ -34,7 +34,7 @@ const Colors: ColorObject = {
   },
   dark: {
     text: '#000',
-    primary: '#ffffff',
+    primary: '#d7f5d7',
     card: '#0000',
     secundary: '#d7f5d7',
     background: '#0f711f',

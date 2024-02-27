@@ -57,8 +57,7 @@ type propsRootLayoutNav = {
   setInitialScreenName: React.Dispatch<React.SetStateAction<string>>;
 };
 function RootLayoutNav({
-  initialScreenName,
-  setInitialScreenName,
+
 }: propsRootLayoutNav) {
   type ColorScheme = "light" | "dark";
 
@@ -86,7 +85,15 @@ function RootLayoutNav({
         <ThemeProvider
           value={{ ...theme, colors: Colors[colorScheme ?? "light"] }}
         >
-          <Slot></Slot>
+          <Stack screenOptions={{headerShown: false}}>
+            <Stack.Screen name="(components)/confirmationModal" options={{presentation: "transparentModal"}} />
+            <Stack.Screen name="(components)/errorModal" options={{presentation: "transparentModal"}} />
+            <Stack.Screen name= "(inventory)/home" options={{headerShown:false}}/>
+            <Stack.Screen name="(login)" options={{headerShown:false}}/>
+            <Stack.Screen name="(app)" options={{headerShown:false,
+            }}/>
+          </Stack>
+         
         </ThemeProvider>
       </SafeAreaView>
     </SafeAreaProvider>

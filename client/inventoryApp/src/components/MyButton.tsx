@@ -10,7 +10,7 @@ export default function MyButton(props : any) {
   const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
   const navigation = useRouter()
   const handleRoute = () =>{
-    if(route){navigation.navigate(route)}
+    if(route){navigation.push(route)}
   } 
 
   const handleAll=()=>{

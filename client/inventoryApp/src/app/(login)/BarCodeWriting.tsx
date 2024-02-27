@@ -33,7 +33,7 @@ export default function BarcodeLogin() {
 
       navigation.replace("/");
     } else {
-      console.error("Falha na autenticação. Erro:", result.error);
+      navigation.push({pathname: '/(components)/errorModal', params: { title : ' Error' }});
     }
   };
 

@@ -6,6 +6,7 @@ const _layoutScreens = () => {
   type ColorScheme = 'light' | 'dark';
   const colorScheme: ColorScheme = useColorScheme() || 'light';
   const colorText = colorScheme === 'light' ? Colors.dark.text: Colors.light.text;
+  
   return (
     <Stack screenOptions={{headerTitleStyle:{color: colorText}}}>
         <Stack.Screen name="index" options={{headerShown: false, headerTitle: 'Início', headerStyle:{backgroundColor:"#fff"} }}/>

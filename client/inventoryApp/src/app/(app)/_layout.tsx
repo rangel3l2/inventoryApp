@@ -29,7 +29,7 @@ export default function TabLayout() {
     <Tabs 
       screenOptions={{
         tabBarInactiveTintColor:  themeColors.tint,
-        tabBarStyle: { backgroundColor: themeColors.background },
+        tabBarStyle: { backgroundColor: themeColors.background, borderTopColor: themeColors.border, borderRadius: 20, borderTopWidth: 2},
         headerShown: false,
       }}
     >
@@ -39,6 +39,7 @@ export default function TabLayout() {
         
           title: "Inicio",
           tabBarIcon: IconHome,
+          
           
         }}
       />
