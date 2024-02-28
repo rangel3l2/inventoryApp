@@ -67,7 +67,7 @@ function RootLayoutNav({
 
   useEffect(() => {
     if (session) {
-      navigation.push("/(app)");
+      navigation.replace("/(app)");
     } else {
       navigation.replace("/(login)");
     }
@@ -85,14 +85,13 @@ function RootLayoutNav({
         <ThemeProvider
           value={{ ...theme, colors: Colors[colorScheme ?? "light"] }}
         >
-          <Stack screenOptions={{headerShown: false}}>
+         {session? <Stack screenOptions={{headerShown: false}}>
             <Stack.Screen name="(components)/confirmationModal" options={{presentation: "transparentModal"}} />
-            <Stack.Screen name="(components)/errorModal" options={{presentation: "transparentModal"}} />
+           
             <Stack.Screen name= "(inventory)/home" options={{headerShown:false}}/>
             <Stack.Screen name="(login)" options={{headerShown:false}}/>
-            <Stack.Screen name="(app)" options={{headerShown:false,
-            }}/>
-          </Stack>
+           
+          </Stack> : <Slot/>}
          
         </ThemeProvider>
       </SafeAreaView>

@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  Dimensions,
-} from "react-native";
+import { Text, View, StyleSheet, Button, Dimensions } from "react-native";
 import { CameraView, Camera } from "expo-camera/next";
 import MyButton from "@/src/components/MyButton";
 const { width, height } = Dimensions.get("window");
@@ -16,7 +10,7 @@ export default function CameraScreen(props: any) {
   const navigation = useRouter();
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [scanned, setScanned] = useState(false);
-  
+
   const { signIn, session } = useSession();
 
   useEffect(() => {
@@ -26,15 +20,12 @@ export default function CameraScreen(props: any) {
     };
     getCameraPermissions();
 
-    // Definindo um temporizador para alterar a variável scanned após 5 segundos
     const timer = setTimeout(() => {
-      setScanned(true);
       if (!session) {
-        navigation.back(); // Navegação de volta após 5 segundos
+        navigation.back;
       }
     }, 15000);
 
-    // Limpando o temporizador ao desmontar o componente
     return () => clearTimeout(timer);
   }, []);
 
@@ -66,7 +57,10 @@ export default function CameraScreen(props: any) {
         result.username
       );
     } else {
-      navigation.push({ pathname: "/(components)/errorModal", params: { title: " Error" } });
+      navigation.replace({
+        pathname: "/(login)/errorModal",
+        params: { title: "Error" },
+      });
     }
   };
 
@@ -84,7 +78,8 @@ export default function CameraScreen(props: any) {
       <MyButton
         style={styles.input}
         title="Digite Código"
-        route="BarCodeWriting"
+        route="/(login)/BarCodeWriting"
+        typeNavigator="replace"
       />
 
       <View style={styles.targetRectangle} />

@@ -12,9 +12,10 @@ import { useColorScheme } from "@/src/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import MyButton from "@/src/components/MyButton";
 import { useRouter } from "expo-router";
-const MyLink = {
-  path: "/home",
-  screen: "Home",
+import CustomHeader from "@/src/components/CustomHeader";
+const MyParams = {
+  title: "Error",
+  screen: "/(login)/BarCodeWriting",
 };
 export default function BarcodeLogin() {
   const navigation = useRouter();
@@ -31,14 +32,23 @@ export default function BarcodeLogin() {
         result.success
       );
 
-      navigation.replace("/");
+     navigation.replace({ pathname: "/" });
     } else {
-      navigation.push({pathname: '/(components)/errorModal', params: { title : ' Error' }});
+      navigation.replace({pathname: '/(login)/errorModal', params:{title:'Error'}});
     }
   };
 
   return (
+    <>
+    <CustomHeader 
+      title="Codigo de Barras"
+      backTitle="inicio"
+      typeNavigator="replace"
+      route={'/'} 
+    />
+    
     <View style={[styles.container, {}]}>
+     
       <TextInput
         style={styles.input}
         placeholder="Digite o código de barras"
@@ -46,8 +56,14 @@ export default function BarcodeLogin() {
         keyboardType="numeric"
         value={barcode}
       />
-      <MyButton title={"Entrar"} handlePress={handleSignIn} />
+      <MyButton 
+      
+        title={"Entrar"} 
+        handlePress={handleSignIn}
+        typeNavigator="replace"
+       />
     </View>
+    </>
   );
 }
 

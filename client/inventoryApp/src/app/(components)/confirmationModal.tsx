@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 import MyButton from '../../components/MyButton';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 import { departamentos } from '../mockedData/Departamentos';
 import { FC } from 'react';
 
@@ -10,15 +10,14 @@ const ConfirmationModal: FC<any> = ({ route }) => {
   const departamento = parseInt(params.departamento as string);
   const navigation = useRouter();
   const title = params.title as string;
-
+  const routesOld = useNavigation()
   const handlePress = () => {
-    navigation.replace('/(inventory)/home');
+
+    departamento&&navigation.replace({pathname: '/(inventory)/home', params: { departamento }});
   };
   const handleParentPress = () => {
-    navigation.replace('/(app)/')
+    navigation.back()
   };
-
-
   
   return (
 
@@ -26,16 +25,21 @@ const ConfirmationModal: FC<any> = ({ route }) => {
        {({ pressed }) => (
       <View style={styles.modal}>
         <Text style={styles.title}>{title}</Text>
-        {departamento && (
+        {departamento ? (
           <Text style={styles.localText}>
             {' '}
             {departamentos.find((d) => d.id === departamento)?.nome}?
           </Text>
-        )}
-        {departamento&&<View style={{ gap: 20 }}>
-          <MyButton title="Confirmar" handlePress={handlePress} />
-          <MyButton title="Cancelar" handlePress={() => navigation.replace('/(app)/')} />
-        </View>}
+        ): null}
+        <View style={{ gap: 20 }}>
+          <MyButton 
+            title="Confirmar" 
+            handlePress={handlePress}
+            typeNavigator='replace' />
+          <MyButton title="Cancelar"
+            handlePress={() => navigation.back()}             
+            typeNavigator='replace'/>
+        </View>
       </View>
       )}
     </Pressable>

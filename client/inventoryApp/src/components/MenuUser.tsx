@@ -9,6 +9,7 @@ export default function MenuButtons() {
     <View style = {styles.container}>
       
       <MyButton 
+        typeNavigator='push'
         title= {'Entrar'}
         route = {'CameraScreen'}
       />

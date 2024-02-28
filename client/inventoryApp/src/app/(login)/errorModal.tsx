@@ -6,16 +6,15 @@ import { departamentos } from '../mockedData/Departamentos';
 import { FC } from 'react';
 
 const ConfirmationModal: FC<any> = ({ route }) => {
+
   const params = useLocalSearchParams();
-  const departamento = parseInt(params.departamento as string);
+ 
   const navigation = useRouter();
   const title = params.title as string;
 
-  const handlePress = () => {
-    navigation.replace('/(inventory)/home');
-  };
+ 
   const handleParentPress = () => {
-    navigation.back()
+    navigation.replace({pathname: '/(login)/BarCodeWriting'})
   };
 
 
@@ -28,7 +27,10 @@ const ConfirmationModal: FC<any> = ({ route }) => {
         <Text style={styles.title}>{title}</Text>      
        <View style={{ gap: 20 }}>
         
-          <MyButton title="Fechar" handlePress={() => navigation.back()} />
+          <MyButton 
+            title="Fechar" 
+            route={{pathname: '/(login)/BarCodeWriting'}}
+            typeNavigator='replace' />
         </View>
       </View>
       )}

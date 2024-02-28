@@ -11,7 +11,8 @@ const _layoutScreens = () => {
     <Stack screenOptions={{headerTitleStyle:{color: colorText}}}>
         <Stack.Screen name="index" options={{headerShown: false, headerTitle: 'Início', headerStyle:{backgroundColor:"#fff"} }}/>
         <Stack.Screen name="CameraScreen" options={{headerTitle: 'Sua Câmera'}}  />
-        <Stack.Screen name="BarCodeWriting" options={{headerTitle: "Código de barras"}}/>
+        <Stack.Screen name="BarCodeWriting" options={{headerTitle: "Código de barras", headerShown: false}}/>
+        <Stack.Screen name= "errorModal" options={{headerShown: false, presentation:'transparentModal'}} />
    
     </Stack>
   )

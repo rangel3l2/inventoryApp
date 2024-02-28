@@ -18,7 +18,11 @@ const Profile = () => {
     <View style={styles.container}>
       <Text>{session?.username}</Text>
       <Text>{session?.role}</Text>
-      <MyButton handlePress={handleSignOut} title={"Sair"} />
+      <MyButton 
+      handlePress={handleSignOut} 
+      title={"Sair"} 
+      typeNavigator="replace"
+      />
     </View>
   );
 };

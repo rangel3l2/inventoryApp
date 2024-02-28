@@ -1,16 +1,22 @@
 import React from 'react';
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { useColorScheme } from '@/src/components/useColorScheme';
 import Colors from '../../constants/Colors';
 import { useRouter } from 'expo-router';
-
-export default function MyButton(props : any) {
-  const { route , title = 'Save', style = '', handlePress } = props;
+interface MyButtonProps {
+  title?: string; // Optional title with default value
+  style?: any; // Optional style object
+  handlePress?: () => void; // Optional function for handling press events
+  route?: any; // Optional route path
+  typeNavigator: 'push' | 'replace' | 'back'; 
+}
+export default function MyButton(props : MyButtonProps) {
+  const { route , title = 'Save', style = '', handlePress, typeNavigator } = props;
   const colorScheme = useColorScheme()
   const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
   const navigation = useRouter()
   const handleRoute = () =>{
-    if(route){navigation.push(route)}
+    if(route){navigation[typeNavigator](route)}
   } 
 
   const handleAll=()=>{

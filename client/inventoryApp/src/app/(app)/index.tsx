@@ -1,32 +1,36 @@
   import { Stack, useNavigation, useRouter } from "expo-router";
   import { useEffect, useState } from "react";
   import { Text, View, StyleSheet } from "react-native";
-  import RadioButton from "@/src/components/RadioButton";
+  
   import { Departamento, departamentos } from "../mockedData/Departamentos";
   import { FlashList } from "@shopify/flash-list";
   import { useColorScheme } from '@/src/components/useColorScheme';
   import Colors from "@/constants/Colors";
-
+  import { RadioButton } from "react-native-paper";
+import CustomRadioButton from "@/src/components/CustomRadioButton";
 
   export default function Home() {
+    const [value, setValue]  = useState('');
     const route = useRouter();
-    const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
     const navigation = useNavigation();
     const colorScheme = useColorScheme()
     const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
-  const handleSelect =  (id : any ) => {
-  
-    setSelectedDepartmentId(id);
-    setTimeout(() => {
+  const handleSelect =  (id : string ) => {
+    setValue(id)
+   
+    
       route.push({pathname: '/(components)/confirmationModal', params: {departamento: id, title : 'Confirmar Local'}});
-    },300);
+     
+    
 
     
   };
     useEffect(() => {
       navigation.setOptions({ headerShown: false });
     }, [navigation]);
-
+  
+          
+    
     return (
       <View style={[styles.container,{backgroundColor: themeColors.primary}]}>
         <Text style={styles.title}>Selecione Local:</Text>
@@ -34,17 +38,16 @@
         <View style = {styles.FlashList}>
           <FlashList
             data={departamentos}
-            keyExtractor={(item : any) => item.id}
+            keyExtractor={(item : Departamento) => item.id.toString()}
             estimatedItemSize={50}
             renderItem={({ item }) => (
-              <RadioButton
-                label={item.nome}
-                value={item.id}
-                selected={item.id === selectedDepartmentId}
-                
-                onSelect={handleSelect}
-              />
-            )}
+              <CustomRadioButton item={item} 
+              value={item.id.toString()} 
+              onSelect={handleSelect} 
+             />
+            )
+
+            }
           />
         </View>
       </View>
