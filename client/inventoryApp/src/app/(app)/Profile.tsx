@@ -5,9 +5,9 @@ import { useRouter } from "expo-router";
 import MyButton from "@/src/components/MyButton";
 
 type Profile = {
-  username : string,
-  role: string
-}
+  username: string;
+  role: string;
+};
 const Profile = () => {
   const navigation = useRouter();
   const { signOut, session } = useSession();
@@ -18,10 +18,10 @@ const Profile = () => {
     <View style={styles.container}>
       <Text>{session?.username}</Text>
       <Text>{session?.role}</Text>
-      <MyButton 
-      handlePress={handleSignOut} 
-      title={"Sair"} 
-      typeNavigator="replace"
+      <MyButton
+        handlePress={handleSignOut}
+        title={"Sair"}
+        typeNavigator="replace"
       />
     </View>
   );

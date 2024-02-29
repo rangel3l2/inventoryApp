@@ -12,6 +12,7 @@ export type ColorScheme = {
   tabIconSelected: string;
   border: string;
   notification: string;
+  placeholder: string;
 };
 
 type ColorObject = {
@@ -31,6 +32,7 @@ const Colors: ColorObject = {
     tabIconSelected: tintColorLight,
     border: '#0000',
     notification: '#0000',
+    placeholder:'#898989'
   },
   dark: {
     text: '#000',
@@ -43,6 +45,7 @@ const Colors: ColorObject = {
     tabIconSelected: tintColorDark,
     border: '#0000',
     notification: '#0000',
+    placeholder:'#898989'
   },
 };
 

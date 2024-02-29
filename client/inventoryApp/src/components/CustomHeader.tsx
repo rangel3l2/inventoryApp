@@ -45,16 +45,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    width: '60%',
+    width: '100%',
+    
   },
   backHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    
   },
   headerTitle: {
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 17,
+    flex: 1,
+    marginRight:'16%'
+
+   
+    
+    
   },
   headerBackTitle: {
     textAlign: 'center',

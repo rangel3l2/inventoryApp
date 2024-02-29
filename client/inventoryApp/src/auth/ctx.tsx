@@ -30,7 +30,7 @@
     const signIn = async (barcode: string) => {   
       
       try {
-        const response = await axios.post('http://192.168.0.110:5000/auth', {
+        const response = await axios.post('http://192.168.1.105:5000/auth', {
           barcode,
         });
 
