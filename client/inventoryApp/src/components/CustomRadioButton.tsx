@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { Departamento } from "../app/mockedData/Departamentos";
+import { check } from "react-native-permissions";
 type RadioButtonProps = {
   value: string;
   item: Departamento;
@@ -17,13 +18,15 @@ const CustomRadioButton = ({
       style={styles.radioButtonContainer}
       onPress={() => onSelect(item.id.toString())}
     >
-      <View style={styles.radioButtonEmpty}>
+      <View >
         <RadioButton
-          color="#000" // Cor do RadioButton selecionado
-          uncheckedColor="#000" // Cor do RadioButton não selecionado
+          uncheckedColor="#000"
+          theme={{ colors: { primary: "#000" , background:'#ffff'} }}
+          color="#000" // Cor do RadioButton selecionado         
           value={item.id.toString()}
-          status={value === item.id.toString() ? "checked" : "unchecked"}
+          status={value === item.id.toString() ? "unchecked" : "checked"}
           onPress={() => {
+            
             onSelect(item.id.toString());
           }}
         />
@@ -54,8 +57,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   radioButtonEmpty: {
-    width: 20,
-    height: 20,
+    width: '20%',
+    height: '20%',
     backgroundColor: "#fff",
     borderRadius: 20,
     borderStyle: "solid",

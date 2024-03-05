@@ -20,11 +20,11 @@ const MySelect : FC<MySelectProps>= (props) => {
         data={data}
         initValue={initialValue}
         onChange={onSelect as any}
-        
+        initValueTextStyle={{color:'#000000'}}
         
         
       />
-      <Text>{label}</Text>
+    
     </View>
   )
 

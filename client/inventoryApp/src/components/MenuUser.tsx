@@ -11,6 +11,7 @@ export default function MenuButtons() {
       <MyButton 
         typeNavigator='push'
         title= {'Entrar'}
+        icon={'right'}
         route = {'CameraScreen'}
       />
     </View>

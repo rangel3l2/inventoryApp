@@ -27,19 +27,23 @@ type data = {
 };
 
 const data = [
-  { key: 1, label: 'Opção 1' },
-  { key: 2, label: 'Opção 2' },
-  { key: 3, label: 'Opção 3' },
+  { key: 1, label: "Devolvido" },
+  { key: 2, label: "Não encontrado" },
+  { key: 3, label: "Com defeito" },
 ];
 
 const home = () => {
-  // Get color scheme and derive text color
+ 
   const colorScheme = useColorScheme() || "light";
   const theme = colorScheme === "light" ? Colors.dark : Colors.light;
+  const themeColorsInverted =
+    colorScheme === "dark" ? Colors.light : Colors.dark;
   const [selectedValue, setSelectedValue] = useState<data | null>(null);
   const [name, setname] = useState("");
   const params = useLocalSearchParams();
   const departamento = parseInt(params.departamento as string);
+  const [canUseCamera, setCanUseCamera] = useState(true);
+  const [scanned, setScanned] = useState(false);
   useEffect(() => {
     departamentos.find((item) => {
       if (departamento === item.id) {
@@ -47,10 +51,25 @@ const home = () => {
       }
     });
   });
-  const onSelect = (data : data) => {
+  const onSelect = (data: data) => {
     console.log(data);
     setSelectedValue(data);
+  };
+  const closeCBCamera = () =>{
+    setCanUseCamera(!canUseCamera?true:false)
+
   }
+  const handleBarCodeScanned = ({
+    type,
+    data,
+  }: {
+    type: string;
+    data: string;
+  }) => {
+   setScanned(true);
+   setCanUseCamera(false);
+   
+  };
   return (
     <View style={styles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
@@ -60,15 +79,15 @@ const home = () => {
           <Card.Title style={styles.title}>Código de Barras:</Card.Title>
 
           <View style={styles.containerCard}>
-            <CameraView
+            {canUseCamera&&<CameraView
               style={styles.containerCamera}
-              onBarcodeScanned={(data) => {
-                console.log(data.data);
-              }}
+              onBarcodeScanned={handleBarCodeScanned}
               barcodeScannerSettings={{
                 barcodeTypes: ["code128"],
               }}
-            />
+              
+            />}
+            
             <View
               style={[
                 styles.closeCameraView,
@@ -76,15 +95,34 @@ const home = () => {
               ]}
             >
               <AntDesign name="barcode" size={30} color="black" />
-              <MyButton typeNavigator="back" title="Fechar leitor CB" />
+              <MyButton 
+                typeNavigator="back"
+                title={canUseCamera?"Fechar Câmera":"Abrir Câmera"} 
+                handlePress={closeCBCamera}
+                icon={canUseCamera?'lock':'unlock'}/>
             </View>
+            <View style={{ height: width / 10, marginTop: 5 }}>
+              
             <TextInput
-              placeholder="Digite o código de barras"
+              
+              placeholder={`Digite o código de barras`}
               keyboardType="numeric"
               style={styles.input}
               enablesReturnKeyAutomatically={true}
               placeholderTextColor={theme.placeholder}
             />
+             <Pressable
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 20,
+              zIndex: 1, // Para garantir que esteja na frente do TextInput
+            }}
+            onPress={() => console.log('chamando dados')}
+          >
+            <AntDesign name="reload1" size={20} color="black" />
+          </Pressable>
+          </View>
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Item:</Card.Title>
             </View>
@@ -99,12 +137,12 @@ const home = () => {
               <Card.Title style={styles.title2}>Status:</Card.Title>
             </View>
             <MySelect
-            label= {data[0].label}
-            data={data}
-            onSelect={onSelect}
-            initialValue="Selecione uma opção"
+              label={data[0].label}
+              data={data}
+              onSelect={onSelect}
+              initialValue="Selecione uma opção"
 
-         // Passar o array de opções diretamente
+              // Passar o array de opções diretamente
             />
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Observação:</Card.Title>
@@ -116,8 +154,19 @@ const home = () => {
               placeholderTextColor={theme.placeholder}
             />
             <View style={styles.menuButtonContainer}>
-              <MyButton typeNavigator="back" title="Adicionar Novo Item" />
-              <MyButton typeNavigator="back" title="Enviar" />
+              <MyButton
+                typeNavigator="back"
+                title="Adicionar Novo Item"
+                icon={"pluscircleo"}
+              />
+              <MyButton
+                typeNavigator="back"
+                style={{ backgroundColor: theme.primary }}
+                styleText={themeColorsInverted.text}
+                iconColor={themeColorsInverted.text}
+                title="Enviar"
+                icon={"save"}
+              />
             </View>
           </View>
 
@@ -146,11 +195,13 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   containerCamera: {
+
     width: "100%",
     height: width / 2,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: "hidden",
+    
   },
   title: {
     alignSelf: "flex-start",

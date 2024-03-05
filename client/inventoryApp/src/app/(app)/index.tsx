@@ -6,7 +6,6 @@ import { Departamento, departamentos } from "../mockedData/Departamentos";
 import { FlashList } from "@shopify/flash-list";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import { RadioButton } from "react-native-paper";
 import CustomRadioButton from "@/src/components/CustomRadioButton";
 
 export default function Home() {

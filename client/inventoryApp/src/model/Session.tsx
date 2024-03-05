@@ -1,5 +1,5 @@
 export type Session = {
-    username : string,
+    name : string,
     role: string,
     sucess: string
 }

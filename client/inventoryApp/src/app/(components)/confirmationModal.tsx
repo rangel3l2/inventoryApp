@@ -34,9 +34,11 @@ const ConfirmationModal: FC<any> = ({ route }) => {
         <View style={{ gap: 20 }}>
           <MyButton 
             title="Confirmar" 
+            icon={'check'}
             handlePress={handlePress}
             typeNavigator='replace' />
           <MyButton title="Cancelar"
+            icon={'close'}
             handlePress={() => navigation.back()}             
             typeNavigator='replace'/>
         </View>

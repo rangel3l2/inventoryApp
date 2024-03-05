@@ -28,6 +28,7 @@ const ConfirmationModal: FC<any> = ({ route }) => {
        <View style={{ gap: 20 }}>
         
           <MyButton 
+            icon={'close'}
             title="Fechar" 
             route={{pathname: '/(login)/BarCodeWriting'}}
             typeNavigator='replace' />

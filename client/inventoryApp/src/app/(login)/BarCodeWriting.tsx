@@ -28,7 +28,7 @@ export default function BarcodeLogin() {
     if (result.success) {
       console.log(
         "Autenticação bem-sucedida. Nome de usuário:",
-        result.username,
+        result.name,
         result.success
       );
 
@@ -57,7 +57,7 @@ export default function BarcodeLogin() {
         value={barcode}
       />
       <MyButton 
-      
+        icon={"login"}
         title={"Entrar"} 
         handlePress={handleSignIn}
         typeNavigator="replace"

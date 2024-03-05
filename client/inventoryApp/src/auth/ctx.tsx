@@ -5,7 +5,7 @@
   import { Session } from '../model/Session';
 
   const AuthContext = React.createContext<{
-    signIn: (barcode: string) => Promise<{ success: boolean; username?: string; error?: string }>;
+    signIn: (barcode: string) => Promise<{ success: boolean; name?: string; error?: string }>;
     signOut: () => void;
     session?:  null | Session;
     isLoading: boolean;
@@ -27,29 +27,57 @@
   export function SessionProvider(props: React.PropsWithChildren) { 
     const [[isLoading, session], setSession] = useStorageState('session');
     const navigation = useRouter()
-    const signIn = async (barcode: string) => {   
       
+      
+    async function signIn(barcode: string) {
       try {
-        const response = await axios.post('http://192.168.1.105:5000/auth', {
-          barcode,
-        });
-
-        if (response.status === 200) {
-          // Se o backend retornar true, definimos a sessão com o nome de usuário
-          if (response.data.success) {
-            setSession(response.data);
-            return { success: true, username: response.data.username };
-          } else {
-            return { success: false, error: 'Autenticação falhou' };
-          }
-        } else {
-          return { success: false, error: 'Erro na requisição para autenticação' };
+        // Obter a lista de IPs do Pastebin
+        const response = await axios.get('https://pastebin.com/raw/EdBLxG4p');
+    
+        // Verificar se a requisição foi bem-sucedida
+        if (response.status !== 200) {
+          throw new Error('Erro ao buscar os IPs');
         }
+    
+        // Verificar o tipo de dados retornado
+        if (typeof response.data !== 'string') {
+          throw new Error('Erro ao buscar os IPs');
+        }
+    
+        // Extrair a lista de IPs do texto obtido
+        const ips = response.data.split(','); // Separa cada linha do texto em um elemento do array
+    
+        let response2;
+        
+        for (const ip of ips) {
+          console.log('ip',)
+          try {
+            // Tentar a autenticação com o IP atual
+            response2 = await axios.post(`${ips}/auth`, {
+              barcode,
+            });
+    
+            if (response2.status === 200) {
+              if (response2.data.success) {
+                setSession(response2.data);
+                return { success: true, name: response2.data.name };
+              } else {
+                return { success: false, error: 'Autenticação falhou' };
+              }
+            }
+          } catch (error) {
+            console.error('Erro na autenticação com o IP', ip, error);
+          }
+        }
+    
+        return { success: false, error: 'Autenticação falhou em todos os IPs' };
       } catch (error) {
         console.error('Erro durante a autenticação:', error);
         return { success: false, error: 'Ocorreu um erro durante a autenticação' };
       }
-    };
+    }
+    
+    
 
   async function signOut()  {  
 

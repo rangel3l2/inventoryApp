@@ -54,7 +54,7 @@ export default function CameraScreen(props: any) {
     if (result.success) {
       console.log(
         "Autenticação bem-sucedida. Nome de usuário:",
-        result.username
+        result.name
       );
     } else {
       navigation.replace({
