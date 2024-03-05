@@ -42,7 +42,7 @@ export default function BarcodeLogin() {
     <>
     <CustomHeader 
       title="Codigo de Barras"
-      backTitle="inicio"
+      backTitle="Início"
       typeNavigator="replace"
       route={'/'} 
     />

@@ -7,6 +7,7 @@ import {
   Dimensions,
   Pressable,
   useColorScheme,
+  
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   menuButtonContainer: {
-    marginTop: width / 10,
+    marginTop: width / 12,
     flexDirection: "row",
     justifyContent: "space-around",
     height: 50,

@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
   backHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    
+  
   },
   headerTitle: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 20,
     flex: 1,
     marginRight:'16%'
 
@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
   },
   headerBackTitle: {
     textAlign: 'center',
-    fontWeight: '600',
-    fontSize: 16,
+    fontWeight: '700',
+    fontSize: 18,
   },
 });
 
