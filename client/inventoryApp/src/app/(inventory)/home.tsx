@@ -19,6 +19,7 @@ import MyButton from "@/src/components/MyButton";
 import { Camera, CameraView } from "expo-camera/next";
 import Colors from "@/constants/Colors";
 import MySelect from "@/src/components/inventario/MySelect";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,6 +46,13 @@ const home = () => {
   const departamento = parseInt(params.departamento as string);
   const [canUseCamera, setCanUseCamera] = useState(true);
   const [scanned, setScanned] = useState(false);
+  const [item, setItem] = useState({
+    barcode: "",
+    name: "",
+    status: "Selecione uma opção",
+    observation: "",
+  });
+  
   useEffect(() => {
     departamentos.find((item) => {
       if (departamento === item.id) {
@@ -53,7 +61,7 @@ const home = () => {
     });
   });
   const onSelect = (data: data) => {
-    console.log(data);
+    setItem({...item, status:data.label})    
     setSelectedValue(data);
   };
   const closeCBCamera = () =>{
@@ -67,6 +75,7 @@ const home = () => {
     type: string;
     data: string;
   }) => {
+    setItem({...item, barcode:data});
    setScanned(true);
    setCanUseCamera(false);
    
@@ -81,8 +90,10 @@ const home = () => {
 
           <View style={styles.containerCard}>
             {canUseCamera&&<CameraView
+              
               style={styles.containerCamera}
               onBarcodeScanned={handleBarCodeScanned}
+              
               barcodeScannerSettings={{
                 barcodeTypes: ["code128"],
               }}
@@ -100,13 +111,15 @@ const home = () => {
                 typeNavigator="back"
                 title={canUseCamera?"Fechar Câmera":"Abrir Câmera"} 
                 handlePress={closeCBCamera}
-                icon={canUseCamera?'lock':'unlock'}/>
+                iconFeather={canUseCamera?'camera-off':'camera'}/>
             </View>
             <View style={{ height: width / 10, marginTop: 5 }}>
               
             <TextInput
               
               placeholder={`Digite o código de barras`}
+              onChange={(data)=>setItem({...item, barcode:data.nativeEvent.text})}
+              value={item.barcode}
               keyboardType="numeric"
               style={styles.input}
               enablesReturnKeyAutomatically={true}
@@ -128,20 +141,24 @@ const home = () => {
               <Card.Title style={styles.title2}>Item:</Card.Title>
             </View>
             <TextInput
+              value={item.name}
               placeholder="Digite o nome do item"
               style={styles.input}
               enablesReturnKeyAutomatically={true}
               placeholderTextColor={theme.placeholder}
+              onChange={(data)=>setItem({...item, name:data.nativeEvent.text})}
             />
 
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Status:</Card.Title>
             </View>
             <MySelect
+            
               label={data[0].label}
               data={data}
+            
               onSelect={onSelect}
-              initialValue="Selecione uma opção"
+              initialValue={item.status}
 
               // Passar o array de opções diretamente
             />
@@ -150,14 +167,17 @@ const home = () => {
             </View>
             <TextInput
               placeholder="Digite sua observação"
+              value={item.observation}
               style={styles.input}
               enablesReturnKeyAutomatically={true}
               placeholderTextColor={theme.placeholder}
+              onChange={(data)=>setItem({...item, observation:data.nativeEvent.text})}
             />
             <View style={styles.menuButtonContainer}>
               <MyButton
                 typeNavigator="back"
                 title="Adicionar Novo Item"
+                handlePress={() => setItem({barcode:"",name:"",status:"Selecione uma opção",observation:""})}
                 icon={"pluscircleo"}
               />
               <MyButton
@@ -166,6 +186,7 @@ const home = () => {
                 styleText={themeColorsInverted.text}
                 iconColor={themeColorsInverted.text}
                 title="Enviar"
+                handlePress={() => console.log(item)}
                 icon={"save"}
               />
             </View>

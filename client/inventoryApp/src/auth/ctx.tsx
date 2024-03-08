@@ -31,53 +31,43 @@
       
     async function signIn(barcode: string) {
       try {
-        // Obter a lista de IPs do Pastebin
-        const response = await axios.get('https://pastebin.com/raw/EdBLxG4p');
-    
-        // Verificar se a requisição foi bem-sucedida
-        if (response.status !== 200) {
-          throw new Error('Erro ao buscar os IPs');
-        }
-    
-        // Verificar o tipo de dados retornado
-        if (typeof response.data !== 'string') {
-          throw new Error('Erro ao buscar os IPs');
-        }
-    
-        // Extrair a lista de IPs do texto obtido
-        const ips = response.data.split(','); // Separa cada linha do texto em um elemento do array
-    
-        let response2;
-        
-        for (const ip of ips) {
-          console.log('ip',)
-          try {
-            // Tentar a autenticação com o IP atual
-            response2 = await axios.post(`${ips}/auth`, {
-              barcode,
-            });
-    
-            if (response2.status === 200) {
-              if (response2.data.success) {
-                setSession(response2.data);
-                return { success: true, name: response2.data.name };
-              } else {
-                return { success: false, error: 'Autenticação falhou' };
-              }
-            }
-          } catch (error) {
-            console.error('Erro na autenticação com o IP', ip, error);
+          // Obter a lista de IPs do Pastebin
+          const response = await axios.get('https://pastebin.com/raw/EdBLxG4p');
+  
+          if (response.status !== 200) {
+              throw new Error('Erro ao buscar os IPs');
           }
-        }
-    
-        return { success: false, error: 'Autenticação falhou em todos os IPs' };
+  
+          const ipList = response.data.trim().split(','); // Remover espaços e dividir por vírgula
+          let response2;
+  
+          for (const ip of ipList) {
+              try {
+                  // Tentar a autenticação com o IP atual
+                  response2 = await axios.post(`${ip.trim()}/auth`, {
+                      barcode,
+                  });
+  
+                  if (response2.status === 200) {
+                      if (response2.data.success) {
+                          setSession(response2.data);
+                          return { success: true, name: response2.data.name };
+                      } else {
+                          return { success: false, error: 'Autenticação falhou' };
+                      }
+                  }
+              } catch (error) {
+                  console.error('Erro na autenticação com o IP', ip, error);
+              }
+          }
+  
+          return { success: false, error: 'Autenticação falhou em todos os IPs' };
       } catch (error) {
-        console.error('Erro durante a autenticação:', error);
-        return { success: false, error: 'Ocorreu um erro durante a autenticação' };
+          console.error('Erro durante a autenticação:', error);
+          return { success: false, error: 'Ocorreu um erro durante a autenticação' };
       }
-    }
-    
-    
+  }
+  
 
   async function signOut()  {  
 

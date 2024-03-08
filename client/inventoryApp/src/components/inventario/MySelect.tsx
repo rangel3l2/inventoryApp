@@ -23,6 +23,7 @@ const MySelect : FC<MySelectProps>= (props) => {
         initValueTextStyle={{color:'#000000'}}
         
         
+        
       />
     
     </View>
@@ -35,8 +36,7 @@ const styles = StyleSheet.create({
   container: {
     height: 50,
     marginLeft:10,
-    flexDirection: 'row',
-    
+    flexDirection: 'row',    
     alignItems: 'center',
     justifyContent: 'flex-start',
 
