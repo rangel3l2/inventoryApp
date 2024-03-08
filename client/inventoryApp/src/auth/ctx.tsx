@@ -3,7 +3,7 @@
   import { useStorageState } from './expo-secure-storage';
   import { useRouter } from 'expo-router';
   import { Session } from '../model/Session';
-
+  
   const AuthContext = React.createContext<{
     signIn: (barcode: string) => Promise<{ success: boolean; name?: string; error?: string }>;
     signOut: () => void;
@@ -30,10 +30,11 @@
       
       
     async function signIn(barcode: string) {
+      
       try {
           // Obter a lista de IPs do Pastebin
           const response = await axios.get('https://pastebin.com/raw/EdBLxG4p');
-  
+          
           if (response.status !== 200) {
               throw new Error('Erro ao buscar os IPs');
           }
