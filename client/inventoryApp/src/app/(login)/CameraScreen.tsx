@@ -54,8 +54,10 @@ export default function CameraScreen(props: any) {
     if (result.success) {
       console.log(
         "Autenticação bem-sucedida. Nome de usuário:",
-        result.name
+      
       );
+      const message = "Você deseja manter a sessão ativa depois de entrar?";
+      navigation.replace(`/(login)/keepSessionModal?title=${message}` as any);
     } else {
       navigation.replace({
         pathname: "/(login)/errorModal",

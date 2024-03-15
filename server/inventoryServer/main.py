@@ -3,12 +3,13 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 from auth.auth import authenticate_user
 from auth.auth import AuthError
+
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'olamundoforeveryone' 
-jwt = JWTManager(app)  # Initialize JWTManager
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
+jwt = JWTManager(app)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Import for creating access tokens
 from flask_jwt_extended import create_access_token
 
 @app.route('/auth', methods=['POST'])
@@ -30,7 +31,7 @@ def authenticate():
 @app.route('/protected', methods=['GET'])
 @jwt_required()
 def protected_route():
-      # Access the identity of the current user with get_jwt_identity
+         
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 

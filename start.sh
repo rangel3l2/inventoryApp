@@ -4,7 +4,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Define o caminho relativo para as pastas
-pasta1="$DIR/inventoryApp/server/inventoryServer"
+pasta1="$DIR/server/inventoryServer"
 pasta2="$DIR/../pasta2"
 
 # Função para entrar na pasta e ativar o ambiente virtual

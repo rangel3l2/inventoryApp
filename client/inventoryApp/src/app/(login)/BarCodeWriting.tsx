@@ -28,11 +28,11 @@ export default function BarcodeLogin() {
     if (result.success) {
       console.log(
         "Autenticação bem-sucedida. Nome de usuário:",
-        result.name,
+        
         result.success
       );
-
-     navigation.replace({ pathname: "/" });
+     const message = "Você deseja manter a sessão ativa depois de entrar?";
+     navigation.replace(`/(login)/keepSessionModal?title=${message}` as any);
     } else {
       navigation.replace({pathname: '/(login)/errorModal', params:{title:'Error'}});
     }

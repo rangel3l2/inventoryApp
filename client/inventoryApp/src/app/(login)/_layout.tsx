@@ -13,6 +13,7 @@ const _layoutScreens = () => {
         <Stack.Screen name="CameraScreen" options={{headerTitle: 'Sua Câmera'}}  />
         <Stack.Screen name="BarCodeWriting" options={{headerTitle: "Código de barras", headerShown: false}}/>
         <Stack.Screen name= "errorModal" options={{headerShown: false, presentation:'transparentModal'}} />
+        <Stack.Screen name= "keepSessionModal" options={{headerShown: false, presentation:'transparentModal'}} />
    
     </Stack>
   )

@@ -1,5 +1,5 @@
 from interfaces import ITokenRepository
-from app.domain.User import Usuario
+from api.domain.User import Usuario
 from jwt import encode
 from config import SECRET_KEY, ALGORITHM
 
