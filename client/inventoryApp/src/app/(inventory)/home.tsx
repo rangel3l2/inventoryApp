@@ -20,7 +20,9 @@ import { Camera, CameraView } from "expo-camera/next";
 import Colors from "@/constants/Colors";
 import MySelect from "@/src/components/inventario/MySelect";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-
+import { getServerUrl } from "@/src/utils/conectionServer";
+import axios from "axios";
+import { Place } from "@/src/model/place";
 const { width, height } = Dimensions.get("window");
 
 type data = {
@@ -43,7 +45,7 @@ const home = () => {
   const [selectedValue, setSelectedValue] = useState<data | null>(null);
   const [name, setname] = useState("");
   const params = useLocalSearchParams();
-  const departamento = parseInt(params.departamento as string);
+  const {nome, id} = params as Place | any
   const [canUseCamera, setCanUseCamera] = useState(true);
   const [scanned, setScanned] = useState(false);
   const [item, setItem] = useState({
@@ -52,14 +54,25 @@ const home = () => {
     status: "Selecione uma opção",
     observation: "",
   });
-  
   useEffect(() => {
-    departamentos.find((item) => {
-      if (departamento === item.id) {
-        setname(item.nome.toString());
+    const url = async ()=>{
+      const response= await getServerUrl()
+      if(response.status === 200){
+        return response.data
       }
-    });
-  });
+    const dataUrl = await url()
+    if(dataUrl){
+      const data = axios.get(`${dataUrl}/places`)
+
+    } 
+     
+    }
+        
+  
+
+    
+  },[] ) 
+
   const onSelect = (data: data) => {
     setItem({...item, status:data.label})    
     setSelectedValue(data);
@@ -83,7 +96,7 @@ const home = () => {
   return (
     <View style={styles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
-        <CustomHeader title={name ? name : ""} typeNavigator="back" />
+        <CustomHeader title={nome ? nome : ""} typeNavigator="back" />
 
         <Card containerStyle={styles.containerCard}>
           <Card.Title style={styles.title}>Código de Barras:</Card.Title>

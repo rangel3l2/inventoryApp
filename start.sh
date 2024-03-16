@@ -10,7 +10,7 @@ pasta2="$DIR/../pasta2"
 # Função para entrar na pasta e ativar o ambiente virtual
 entrar_e_ativar() {
     cd "$1"  # Entra na pasta fornecida como argumento
-    source ../venv/bin/activate  # Ativa o ambiente virtual
+    source ./venv/bin/activate  # Ativa o ambiente virtual
 }
 
 # Função para executar o script Python

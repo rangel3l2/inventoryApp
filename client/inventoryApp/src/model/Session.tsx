@@ -1,5 +1,4 @@
 export type Session = {
-    name : string,
-    role: string,
+    token: string,
     sucess: string
 }

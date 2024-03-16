@@ -4,16 +4,19 @@ import MyButton from '../../components/MyButton';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 import { departamentos } from '../mockedData/Departamentos';
 import { FC } from 'react';
+import { Place } from '@/src/model/place';
 
-const ConfirmationModal: FC<any> = ({ route }) => {
+const ConfirmationModal: FC<any> = () => {
   const params = useLocalSearchParams();
   const departamento = parseInt(params.departamento as string);
   const navigation = useRouter();
-  const title = params.title as string;
+ 
+  const {nome, id, title} = params 
+  
   const routesOld = useNavigation()
   const handlePress = () => {
 
-    departamento&&navigation.replace({pathname: '/(inventory)/home', params: { departamento }});
+    navigation.replace(`/(inventory)/home?nome=${nome}&&id=${id}` as any);
   };
   const handleParentPress = () => {
     navigation.back()
@@ -25,10 +28,10 @@ const ConfirmationModal: FC<any> = ({ route }) => {
        {({ pressed }) => (
       <View style={styles.modal}>
         <Text style={styles.title}>{title}</Text>
-        {departamento ? (
+        {nome ? (
           <Text style={styles.localText}>
             {' '}
-            {departamentos.find((d) => d.id === departamento)?.nome}?
+            {nome}?
           </Text>
         ): null}
         <View style={{ gap: 20 }}>

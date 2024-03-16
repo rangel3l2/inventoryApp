@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { RadioButton } from "react-native-paper";
-import { Departamento } from "../app/mockedData/Departamentos";
-import { check } from "react-native-permissions";
+import { Place } from "../model/place";
+
 type RadioButtonProps = {
   value: string;
-  item: Departamento;
-  onSelect: (str: string) => void;
+  item: Place;
+  onSelect: (str: Place) => void;
 };
 const CustomRadioButton = ({
   item,
   value,
   onSelect,
 }: RadioButtonProps) => {
+  
   return (
     <Pressable
       style={styles.radioButtonContainer}
-      onPress={() => onSelect(item.id.toString())}
+      onPress={() => onSelect(item)}
     >
       <View >
         <RadioButton
@@ -27,7 +28,7 @@ const CustomRadioButton = ({
           status={value === item.id.toString() ? "unchecked" : "checked"}
           onPress={() => {
             
-            onSelect(item.id.toString());
+            onSelect(item);
           }}
         />
       </View>
