@@ -7,22 +7,24 @@ import {
   Dimensions,
   Pressable,
   useColorScheme,
-  
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CustomHeader from "@/src/components/CustomHeader";
 import { useLocalSearchParams } from "expo-router";
-import { departamentos } from "../mockedData/Departamentos";
 import { Card } from "@rneui/themed";
 import MyButton from "@/src/components/MyButton";
-import { Camera, CameraView } from "expo-camera/next";
 import Colors from "@/constants/Colors";
 import MySelect from "@/src/components/inventario/MySelect";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { getServerUrl } from "@/src/utils/conectionServer";
 import axios from "axios";
 import { Place } from "@/src/model/place";
+import MyBarCode from "@/src/components/inventario/Mybarcode";
+import { useSession } from "@/src/auth/ctx";
+import { Product } from "@/src/model/products";
+import AutocompleteInput from "react-native-autocomplete-input";
+import MySearch from "@/src/components/inventario/MySearch";
+
 const { width, height } = Dimensions.get("window");
 
 type data = {
@@ -37,50 +39,82 @@ const data = [
 ];
 
 const home = () => {
- 
+  const { session } = useSession();
   const colorScheme = useColorScheme() || "light";
   const theme = colorScheme === "light" ? Colors.dark : Colors.light;
   const themeColorsInverted =
     colorScheme === "dark" ? Colors.light : Colors.dark;
   const [selectedValue, setSelectedValue] = useState<data | null>(null);
-  const [name, setname] = useState("");
+  const [names, setnames] = useState([] as Product[]);
   const params = useLocalSearchParams();
-  const {nome, id} = params as Place | any
+  const { nome, id } = params as Place | any;
   const [canUseCamera, setCanUseCamera] = useState(true);
   const [scanned, setScanned] = useState(false);
+  const [itemSearch, setItemSearch] = useState('');
   const [item, setItem] = useState({
     barcode: "",
     name: "",
     status: "Selecione uma opção",
     observation: "",
   });
-  useEffect(() => {
-    const url = async ()=>{
-      const response= await getServerUrl()
-      if(response.status === 200){
-        return response.data
-      }
-    const dataUrl = await url()
-    if(dataUrl){
-      const data = axios.get(`${dataUrl}/places`)
+  const searchComponentRef = useRef(false);
+  const[isActiveSearch, setIsActiveSearch] = useState(false)
+  const [onSelectSearchItem, setOnSelectSearchItem] = useState('');
 
-    } 
-     
+  const [filteredNames, setFilteredNames] = useState([]);
+
+  useEffect(() => {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.token}`,
+    };
+
+    async function getServerUrlAndItem() {
+      try {
+        const urlData = await getServerUrl();
+        console.log(urlData.data);
+        const response2 = await axios.get<Product | any>(
+          urlData.data + "/products",
+          {
+            headers,
+          }
+        );
+        if (response2.status === 200) {
+          setnames(response2.data);
+          console.log(names);
+        }
+      } catch (error) {
+        // Handle errors from getServerUrl or getItem
+        console.error(error);
+      }
     }
-        
+
+    getServerUrlAndItem();
+   
   
 
-    
-  },[] ) 
+  }, []);
+
+  const searchItemControl = () =>{
+    if(item.name){
+        setOnSelectSearchItem('')
+        }
+  }
+
+  const filterNames = (query: string, names: Product[]) => {
+    const lowerCaseQuery = query.toLowerCase();
+    return names.filter((name) =>
+      name.nome.toLowerCase().includes(lowerCaseQuery)
+    );
+  };
 
   const onSelect = (data: data) => {
-    setItem({...item, status:data.label})    
+    setItem({ ...item, status: data.label });
     setSelectedValue(data);
   };
-  const closeCBCamera = () =>{
-    setCanUseCamera(!canUseCamera?true:false)
-
-  }
+  const closeCBCamera = () => {
+    setCanUseCamera(!canUseCamera ? true : false);
+  };
   const handleBarCodeScanned = ({
     type,
     data,
@@ -88,11 +122,14 @@ const home = () => {
     type: string;
     data: string;
   }) => {
-    setItem({...item, barcode:data});
-   setScanned(true);
-   setCanUseCamera(false);
-   
+    setItem({ ...item, barcode: data });
+    setScanned(true);
+    setCanUseCamera(false);
   };
+  useEffect(() => {
+  
+    setItem({...item, name: onSelectSearchItem})
+  }, [onSelectSearchItem]);
   return (
     <View style={styles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
@@ -102,74 +139,62 @@ const home = () => {
           <Card.Title style={styles.title}>Código de Barras:</Card.Title>
 
           <View style={styles.containerCard}>
-            {canUseCamera&&<CameraView
-              
-              style={styles.containerCamera}
-              onBarcodeScanned={handleBarCodeScanned}
-              
-              barcodeScannerSettings={{
-                barcodeTypes: ["code128"],
-              }}
-              
-            />}
-            
-            <View
-              style={[
-                styles.closeCameraView,
-                { backgroundColor: theme.secundary },
-              ]}
-            >
-              <AntDesign name="barcode" size={30} color="black" />
-              <MyButton 
-                typeNavigator="back"
-                title={canUseCamera?"Fechar Câmera":"Abrir Câmera"} 
-                handlePress={closeCBCamera}
-                iconFeather={canUseCamera?'camera-off':'camera'}/>
-            </View>
-            <View style={{ height: width / 10, marginTop: 5 }}>
-              
-            <TextInput
-              
-              placeholder={`Digite o código de barras`}
-              onChange={(data)=>setItem({...item, barcode:data.nativeEvent.text})}
-              value={item.barcode}
-              keyboardType="numeric"
-              style={styles.input}
-              enablesReturnKeyAutomatically={true}
-              placeholderTextColor={theme.placeholder}
+            <MyBarCode
+              canUseCamera={canUseCamera}
+              handleBarCodeScanned={handleBarCodeScanned}
+              closeCBCamera={closeCBCamera}
+              setItem={setItem}
+              item={item}
             />
-             <Pressable
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 20,
-              zIndex: 1, // Para garantir que esteja na frente do TextInput
-            }}
-            onPress={() => console.log('chamando dados')}
-          >
-            <AntDesign name="reload1" size={20} color="black" />
-          </Pressable>
-          </View>
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Item:</Card.Title>
             </View>
-            <TextInput
-              value={item.name}
-              placeholder="Digite o nome do item"
-              style={styles.input}
-              enablesReturnKeyAutomatically={true}
+            <AutocompleteInput
+              onPressIn={() => setIsActiveSearch(true)}
               placeholderTextColor={theme.placeholder}
-              onChange={(data)=>setItem({...item, name:data.nativeEvent.text})}
-            />
+              placeholder="Digite o nome do item"
+              value={onSelectSearchItem? onSelectSearchItem  : itemSearch}
+              data={filteredNames}
+              hideResults={onSelectSearchItem? true : false}
+              onChangeText={(text) => {
+                searchItemControl()
+                const filtered = filterNames(text, names);
+                setItemSearch(text);
+                setItem({ ...item, name: onSelectSearchItem ? onSelectSearchItem : text});
+                setFilteredNames(filtered  as any);
+               
+              }}
+              flatListProps={{
+                style:{backgroundColor: '#fffff0', height: width/3,borderWidth: 1, borderColor: theme.border, borderRadius: 5, marginTop: 5, marginBottom: 5, width: width - 20, alignSelf: 'center'},
+                scrollEnabled: true,
+                onMagicTap: () => Keyboard.dismiss(),
+                keyExtractor: (item: any) => item.id.toString(),
+                
+                renderItem: ({ item }) => (
+                    
+                  <MySearch
+                   
+                    item={item }
+                    setOnSelectSearchItem={setOnSelectSearchItem}  
+                   
 
+                  />
+                ),
+              }}
+              containerStyle={styles.autocompleteContainer}
+              inputContainerStyle={styles.autocompleteInputContainer}
+              listContainerStyle={{backgroundColor: '#fffff0', }}            
+              style={[styles.input,{ backgroundColor: "#fffff0"}]}
+             
+              clearButtonMode="always"
+              
+            />
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Status:</Card.Title>
             </View>
             <MySelect
-            
               label={data[0].label}
               data={data}
-            
               onSelect={onSelect}
               initialValue={item.status}
 
@@ -184,13 +209,22 @@ const home = () => {
               style={styles.input}
               enablesReturnKeyAutomatically={true}
               placeholderTextColor={theme.placeholder}
-              onChange={(data)=>setItem({...item, observation:data.nativeEvent.text})}
+              onChange={(data) =>
+                setItem({ ...item, observation: data.nativeEvent.text })
+              }
             />
             <View style={styles.menuButtonContainer}>
               <MyButton
                 typeNavigator="back"
                 title="Adicionar Novo Item"
-                handlePress={() => setItem({barcode:"",name:"",status:"Selecione uma opção",observation:""})}
+                handlePress={() =>
+                  setItem({
+                    barcode: "",
+                    name: "",
+                    status: "Selecione uma opção",
+                    observation: "",
+                  })
+                }
                 icon={"pluscircleo"}
               />
               <MyButton
@@ -229,15 +263,7 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
-  containerCamera: {
 
-    width: "100%",
-    height: width / 2,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    overflow: "hidden",
-    
-  },
   title: {
     alignSelf: "flex-start",
     padding: 10,
@@ -259,7 +285,8 @@ const styles = StyleSheet.create({
   input: {
     minWidth: 200,
     height: 40,
-    borderColor: "gray",
+    
+
     borderWidth: 1,
     margin: 10,
     marginBottom: 0,
@@ -269,20 +296,32 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
   },
-  closeCameraView: {
-    height: 50,
-    backgroundColor: "#fff",
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    justifyContent: "space-around",
-    alignItems: "center",
-    flexDirection: "row",
-    marginBottom: 25,
-  },
+
   menuButtonContainer: {
     marginTop: width / 12,
     flexDirection: "row",
     justifyContent: "space-around",
     height: 50,
   },
+  autocompleteContainer: {
+    height: 40,
+    margin: 10,
+    marginBottom: 0,
+    marginTop: 0,
+    minWidth: 200,
+    width: "100%",
+    alignSelf: "center",
+  },
+  autocompleteInputContainer: {
+   
+    borderWidth: 0,
+    marginBottom: 0,
+    marginTop: 0,
+  },
+  autocompleteListContainer: {
+    borderColor: "gray",
+    borderWidth: 1,
+    height: 100,
+  },
+
 });

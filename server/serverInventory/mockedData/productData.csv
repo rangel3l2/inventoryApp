@@ -1,0 +1,119 @@
+id,nome
+1,Mesa
+2,Cadeira
+3,Computador
+4,Monitor
+5,Projetor
+6,Impressora
+7,Armário
+8,Estante
+9,Livro
+10,Giz de cera
+11,Caneta
+12,Lápis
+13,Borracha
+14,Apontador
+15,Tesoura
+16,Cola
+17,Pincel
+18,Tinta
+19,Régua
+20,Transferidor
+21,Calculadora
+22,Globo terrestre
+23,Mapa
+24,Quadro branco
+25,Lousa
+26,Microfone
+27,Alto-falante
+28,Câmera
+29,Televisão
+30,DVD player
+31,Projetor de slides
+32,Retroprojetor
+33,Mesas de laboratório
+34,Cadeiras de laboratório
+35,Microscópio
+36,Telescópio
+37,Balão de ensaio
+38,Pipeta
+39,Bureta
+40,Erlenmeyer
+41,Béquer
+42,Funil
+43,Termômetro
+44,Placa de Petri
+45,Estojo de dissecação
+46,Esqueleto humano
+47,Modelo anatômico
+48,Mapa do corpo humano
+49,Manequim
+50,Bola de futebol
+51,Bola de basquete
+52,Bola de vôlei
+53,Raquete de tênis
+54,Raquete de badminton
+55,Mesa de pingue-pongue
+56,Rede de vôlei
+57,Trave de futebol
+58,Cesto de basquete
+59,Cama elástica
+60,Colchonete
+61,Barra fixa
+62,Barra de paralelas
+63,Cavalete
+64,Trampolim
+65,Steps
+66,Halteres
+67,Anilhas
+68,Bola suíça
+69,Corda de pular
+70,Tapete de yoga
+71,Instrumentos musicais
+72,Uniformes esportivos
+73,Equipamentos de proteção
+74,Materiais de primeiros socorros
+75,Extintores de incêndio
+76,Placas de sinalização
+77,Câmeras de segurança
+78,Computadores administrativos
+79,Softwares
+80,Impressoras
+81,Scanners
+82,Fotocopiadoras
+83,Fax
+84,Telefones
+85,Celulares
+86,Roteadores
+87,Switches
+88,Cabos de rede
+89,Servidores
+90,No-breaks
+91,Geradores de energia
+92,Ar-condicionado
+93,Ventiladores
+94,Luminárias
+95,Cortinas
+96,Persianas
+97,Mesas de escritório
+98,Cadeiras de escritório
+99,Armários de escritório
+100,Estantes de escritório
+101,Prateleiras
+102,Gaveteiros
+103,Carrinhos de transporte
+104,Escadas
+105,Ferramentas
+106,Materiais de limpeza
+107,Materiais de construção
+108,Veículos
+109,Máquinas
+110,Equipamentos de jardinagem
+111,Plantas
+112,Árvores
+113,Obras de arte
+114,Livros da biblioteca
+115,Materiais de consumo
+116,Uniformes dos funcionários
+117,Equipamentos de segurança dos funcionários
+118,Materiais de expediente

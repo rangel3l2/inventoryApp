@@ -6,7 +6,6 @@ import csv
 csv_file = './mockedData/userData.csv' 
 engine = create_engine('mysql+pymysql://root:root@localhost:3306/', echo=True)
 
-# Criar o banco de dados inventario2022 se não existir
 with engine.connect() as connection:
     connection.execute(text('create database if not exists inventario2022'))
 
@@ -48,6 +47,27 @@ with open(csv_file, 'r') as file:
             place = Place(id= int(row[0]),nome=row[1])
             # Adicionar o objeto User à sessão
             session.add(place)
+            # Fazer o commit da transação
+            session.commit()
+        except Exception as e:
+            # Em caso de erro, fazer rollback
+            print("Erro ao inserir usuário:", e)
+            session.rollback()
+        finally:
+            # Fechar a sessão
+            session.close()
+
+csv_file = './mockedData/productData.csv' 
+with open(csv_file, 'r') as file:
+    csv_reader = csv.reader(file)
+    next(csv_reader)  # Pula o cabeçalho
+    for row in csv_reader:
+        try:
+            # Criar uma instância de User
+            product = Product(id= int(row[0]),name=row[1])
+            print(product)
+            # Adicionar o objeto User à sessão
+            session.add(product)
             # Fazer o commit da transação
             session.commit()
         except Exception as e:

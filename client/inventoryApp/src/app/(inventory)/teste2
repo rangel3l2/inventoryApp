@@ -1,0 +1,18 @@
+<View style={styles.container}>
+        <Pressable onPress={() => Keyboard.dismiss()}>
+          <CustomHeader title={nome ? nome : ""} typeNavigator="back" />
+  
+          <Card containerStyle={styles.containerCard}>
+            <Card.Title style={styles.title}>Código de Barras:</Card.Title>
+  
+            <View style={styles.containerCard}>
+              <MyBarCode
+                canUseCamera={canUseCamera}
+                handleBarCodeScanned={handleBarCodeScanned}
+                closeCBCamera={closeCBCamera}
+                setItem={setItem}
+                item={item}
+              />
+              <View style={{ height: width / 10, marginTop: 5 }}>
+                <Card.Title style={styles.title2}>Item:</Card.Title>{" "}
+              </View>

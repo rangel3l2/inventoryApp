@@ -31,7 +31,7 @@ def authenticate():
 
 @api_blueprint.route('/places', methods=['GET'])
 @jwt_required()
-def get_all_products():
+def get_all_places():
     
     places = use_cases.get_place_data()
    
@@ -39,9 +39,9 @@ def get_all_products():
 
 @api_blueprint.route('/products', methods=['GET'])
 @jwt_required()
-def get_all_places():
-    products = queries.get_all_products()
-    return jsonify(products=[product.to_dict() for product in products])
+def get_all_products():
+    products = use_cases.get_All_Products()
+    return jsonify(products)
 
 @api_blueprint.route('/products/<int:product_id>', methods=['GET'])
 @jwt_required()
