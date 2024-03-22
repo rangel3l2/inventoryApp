@@ -41,6 +41,7 @@
     const navigation = useRouter();
   
     useEffect(() => {
+      
       const subscription = AppState.addEventListener('change', nextAppState => {
         setIsForeground(nextAppState === 'active');
     

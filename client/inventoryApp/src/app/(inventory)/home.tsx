@@ -21,9 +21,12 @@ import axios from "axios";
 import { Place } from "@/src/model/place";
 import MyBarCode from "@/src/components/inventario/Mybarcode";
 import { useSession } from "@/src/auth/ctx";
-import { Product } from "@/src/model/products";
+import { Product, ProductModel } from "@/src/model/products";
 import AutocompleteInput from "react-native-autocomplete-input";
 import MySearch from "@/src/components/inventario/MySearch";
+import extractUserIdFromToken from "@/src/utils/extractIdToken";
+import { Patrimony, PatrimonyModel } from "@/src/model/patrimony";
+import { Item } from "@/src/model/item";
 
 const { width, height } = Dimensions.get("window");
 
@@ -50,16 +53,26 @@ const home = () => {
   const { nome, id } = params as Place | any;
   const [canUseCamera, setCanUseCamera] = useState(true);
   const [scanned, setScanned] = useState(false);
-  const [itemSearch, setItemSearch] = useState('');
-  const [item, setItem] = useState({
-    barcode: "",
+  const [itemSearch, setItemSearch] = useState("");
+  const [url_app, setUrl_app] = useState<any>("");
+  const [item, setItem] = useState<Item>({
+    patrimony_id: null,
+    user_id: null,
+    barcode: null,
     name: "",
     status: "Selecione uma opção",
     observation: "",
+    found_place_id: id,
+    produto_id: null,
+    product_id: {
+      id: null,
+      name: "",
+    },
   });
-  const searchComponentRef = useRef(false);
-  const[isActiveSearch, setIsActiveSearch] = useState(false)
-  const [onSelectSearchItem, setOnSelectSearchItem] = useState('');
+  const [canEditCodeBar, setCanEditCodeBar] = useState(true);
+  const [isActiveSearch, setIsActiveSearch] = useState(false);
+  const [oldPatrimony, setOldPatrimony] = useState<any>("");
+  const [onSelectSearchItem, setOnSelectSearchItem] = useState("");
 
   const [filteredNames, setFilteredNames] = useState([]);
 
@@ -73,6 +86,7 @@ const home = () => {
       try {
         const urlData = await getServerUrl();
         console.log(urlData.data);
+        setUrl_app(urlData.data);
         const response2 = await axios.get<Product | any>(
           urlData.data + "/products",
           {
@@ -85,26 +99,37 @@ const home = () => {
         }
       } catch (error) {
         // Handle errors from getServerUrl or getItem
-        console.error(error);
+        console.error(`Error getting server URL or products: ${error}`);
       }
     }
 
     getServerUrlAndItem();
-   
-  
-
+    get_user_id();
   }, []);
+  const get_user_id = async () => {
+    if (session) {
+      try {
+        const sub_decode = await extractUserIdFromToken(
+          session.token as string
+        );
+        const user_id = sub_decode as any;
 
-  const searchItemControl = () =>{
-    if(item.name){
-        setOnSelectSearchItem('')
-        }
-  }
+        setItem({ ...item, user_id: user_id });
+      } catch (error) {
+        console.error("Error getting user id:", error);
+      }
+    }
+  };
+  const searchItemControl = () => {
+    if (item.name) {
+      setOnSelectSearchItem("");
+    }
+  };
 
   const filterNames = (query: string, names: Product[]) => {
     const lowerCaseQuery = query.toLowerCase();
     return names.filter((name) =>
-      name.nome.toLowerCase().includes(lowerCaseQuery)
+      name.name.toLowerCase().includes(lowerCaseQuery)
     );
   };
 
@@ -122,14 +147,146 @@ const home = () => {
     type: string;
     data: string;
   }) => {
-    setItem({ ...item, barcode: data });
+    setItem({ ...item, barcode: parseInt(data) });
+
     setScanned(true);
     setCanUseCamera(false);
+    getPatrimony(data);
   };
   useEffect(() => {
-  
-    setItem({...item, name: onSelectSearchItem})
+    setItem({ ...item, name: onSelectSearchItem });
   }, [onSelectSearchItem]);
+
+  const getPatrimony = async (barcode: string | null) => {
+    try {
+      if (url_app && session?.token && barcode) {
+        const reponse = await axios.get<Patrimony>(
+          url_app + "/patrimony/" + barcode,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.token}`,
+            },
+          }
+        );
+        if (reponse.status === 200) {
+          setOnSelectSearchItem(
+            reponse.data.product_id?.name ? reponse.data.product_id?.name : ""
+          );
+          if (reponse.data.product_id) {
+            reponse.data.product_id;
+            const product: Product = ProductModel.toJson(
+              reponse.data.product_id
+            );
+            setItem({
+              ...item,
+              name: reponse.data.product_id?.name
+                ? reponse.data.product_id?.name
+                : "",
+              status: reponse.data.status
+                ? reponse.data.status
+                : "Selecione uma opção",
+              observation: reponse.data.observacao
+                ? reponse.data.observacao
+                : "",
+              barcode: parseInt(barcode),
+              product_id: product,
+              produto_id: reponse.data.produto_id
+                ? reponse.data.produto_id
+                : null,
+            });
+          }
+
+          setOldPatrimony(item);
+          setCanEditCodeBar(false);
+        }
+      }
+    } catch (error) {
+      console.error(`Error getting patrimony: ${error}`);
+    }
+  };
+
+  const insertProperty = async () => {
+    if ((item.name, item.found_place_id, item.user_id, !item.barcode)) {
+      console.log("entrou");
+      console.log(item);
+    }
+  };
+  const updatePatrimony = async () => {
+    try {
+      if (!canEditCodeBar) {
+        if (
+          (item.name &&
+          item.found_place_id &&
+          item.user_id  &&
+          item.barcode &&
+          item.product_id &&
+          item.produto_id)
+        ) {
+          if (url_app && session?.token) {
+            const url = url_app + "/patrimony/" + item.barcode;
+            
+              item.product_id.name = item.name
+            ;
+            const patrimony = PatrimonyModel.toJson(item);
+          
+            const response = await axios.put<Patrimony>(url, patrimony, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session?.token}`,
+              },
+            });
+            if (response.status === 200) {
+              console.log("Patrimony updated");
+              alert("Patrimônio atualizado com sucesso");
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Error updating patrimony: ${error}`);
+    }
+    finally{
+      setCanEditCodeBar(true);
+      setItemSearch("");
+  
+      setOnSelectSearchItem("");
+      setItem({
+        ...item,
+        barcode: null,
+        name: "",
+        status: "Selecione uma opção",
+        observation: "",
+      });
+      canUseCamera ? setCanUseCamera(false) : setCanUseCamera(true);
+    }
+  };
+  const insertPatrimony = async () => {
+    if ((item.name, item.found_place_id, item.user_id, item.barcode)) {
+      console.log("entrou");
+      console.log(item);
+    }
+  };
+  const handleAdd = () => {
+    setCanEditCodeBar(true);
+    if (oldPatrimony.barcode !== item.barcode) {
+    } else {
+      insertPatrimony();
+    }
+    //erase logic
+    setCanEditCodeBar(true);
+    setItemSearch("");
+
+    setOnSelectSearchItem("");
+    setItem({
+      ...item,
+      barcode: null,
+      name: "",
+      status: "Selecione uma opção",
+      observation: "",
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
@@ -140,54 +297,73 @@ const home = () => {
 
           <View style={styles.containerCard}>
             <MyBarCode
+              getPatrimonyByBarCode={getPatrimony}
               canUseCamera={canUseCamera}
               handleBarCodeScanned={handleBarCodeScanned}
               closeCBCamera={closeCBCamera}
               setItem={setItem}
+              editCodeBar={canEditCodeBar}
               item={item}
             />
+
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Item:</Card.Title>
             </View>
             <AutocompleteInput
+              
               onPressIn={() => setIsActiveSearch(true)}
               placeholderTextColor={theme.placeholder}
               placeholder="Digite o nome do item"
-              value={onSelectSearchItem? onSelectSearchItem  : itemSearch}
+              value={onSelectSearchItem ? onSelectSearchItem : itemSearch}
               data={filteredNames}
-              hideResults={onSelectSearchItem? true : false}
+              hideResults={onSelectSearchItem || itemSearch.length <=1 ? true : false}
+            
               onChangeText={(text) => {
-                searchItemControl()
+                if(text.length > 1){
+                
                 const filtered = filterNames(text, names);
+                setFilteredNames(filtered as any);
+                }
+                
+                searchItemControl();
                 setItemSearch(text);
-                setItem({ ...item, name: onSelectSearchItem ? onSelectSearchItem : text});
-                setFilteredNames(filtered  as any);
-               
+                setItem({
+                  ...item,
+                  name: onSelectSearchItem ? onSelectSearchItem : text,
+                 
+                });
+                
               }}
               flatListProps={{
-                style:{backgroundColor: '#fffff0', height: width/3,borderWidth: 1, borderColor: theme.border, borderRadius: 5, marginTop: 5, marginBottom: 5, width: width - 20, alignSelf: 'center'},
+                initialNumToRender: 10,
+
+                style: {
+                  backgroundColor: "#fffff0",
+                  height: width / 3,
+                  borderWidth: 1,
+                  borderColor: theme.border,
+                  borderRadius: 5,
+                  marginTop: 5,
+                  marginBottom: 5,
+                  width: width - 20,
+                  alignSelf: "center",
+                },
                 scrollEnabled: true,
                 onMagicTap: () => Keyboard.dismiss(),
-                keyExtractor: (item: any) => item.id.toString(),
-                
+                keyExtractor: (item: Product) =>
+                  item.id ? item.id.toString() : "",
                 renderItem: ({ item }) => (
-                    
                   <MySearch
-                   
-                    item={item }
-                    setOnSelectSearchItem={setOnSelectSearchItem}  
-                   
-
+                    item={item}
+                    setOnSelectSearchItem={setOnSelectSearchItem}
                   />
                 ),
               }}
               containerStyle={styles.autocompleteContainer}
               inputContainerStyle={styles.autocompleteInputContainer}
-              listContainerStyle={{backgroundColor: '#fffff0', }}            
-              style={[styles.input,{ backgroundColor: "#fffff0"}]}
-             
+              listContainerStyle={{ backgroundColor: "#fffff0" }}
+              style={[styles.input, { backgroundColor: "#fffff0" }]}
               clearButtonMode="always"
-              
             />
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Status:</Card.Title>
@@ -214,26 +390,33 @@ const home = () => {
               }
             />
             <View style={styles.menuButtonContainer}>
-              <MyButton
-                typeNavigator="back"
-                title="Adicionar Novo Item"
-                handlePress={() =>
-                  setItem({
-                    barcode: "",
-                    name: "",
-                    status: "Selecione uma opção",
-                    observation: "",
-                  })
-                }
-                icon={"pluscircleo"}
-              />
+              {
+                <MyButton
+                  typeNavigator="back"
+                  title="Adicionar Novo Item"
+                  handlePress={() => {
+                    setCanEditCodeBar(true);
+                    setItemSearch("");
+
+                    setOnSelectSearchItem("");
+                    setItem({
+                      ...item,
+                      barcode: null,
+                      name: "",
+                      status: "Selecione uma opção",
+                      observation: "",
+                    });
+                  }}
+                  icon={"pluscircleo"}
+                />
+              }
               <MyButton
                 typeNavigator="back"
                 style={{ backgroundColor: theme.primary }}
                 styleText={themeColorsInverted.text}
                 iconColor={themeColorsInverted.text}
-                title="Enviar"
-                handlePress={() => console.log(item)}
+                title={canEditCodeBar ? "Salvar" : "Alterar"}
+                handlePress={updatePatrimony}
                 icon={"save"}
               />
             </View>
@@ -285,7 +468,6 @@ const styles = StyleSheet.create({
   input: {
     minWidth: 200,
     height: 40,
-    
 
     borderWidth: 1,
     margin: 10,
@@ -313,7 +495,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   autocompleteInputContainer: {
-   
     borderWidth: 0,
     marginBottom: 0,
     marginTop: 0,
@@ -323,5 +504,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 100,
   },
-
 });

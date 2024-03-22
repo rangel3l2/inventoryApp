@@ -12,7 +12,7 @@ def authenticate_user(barcode):
 
         # Chame o método get_user_by_barcode() na instância de UserRepository
         user = user_repository.get_user_by_barcode(barcode)
-        print(user)
+        
         
         if not user:
             raise AuthError('Usuário não encontrado', 404)

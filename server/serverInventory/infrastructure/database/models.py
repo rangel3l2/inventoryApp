@@ -28,7 +28,7 @@ class Product(Base):
     __tablename__ = "produto"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(255))
+    name = Column(String(255), name="name")
     
     #patrimonios = relationship("Patrimony", back_populates="produto")
     #bens = relationship("Property", back_populates="produto")
@@ -41,8 +41,7 @@ class Patrimony(Base):
     observacao = Column(String(255), nullable=True)
     responsavel = Column(String(255), nullable=True)
     setor_responsavel = Column(String(255), nullable=True)
-    status = Column(String(2), nullable=True)
-
+    status = Column(String(255), nullable=True)
     inventariante_id = Column(Integer, ForeignKey('inventariante.id'), nullable=True)
     local_encontrado_id = Column(Integer, ForeignKey('local.id'), nullable=True)
     local_id = Column(Integer, ForeignKey('local.id'), nullable=True)
@@ -57,12 +56,12 @@ class Property(Base):
     __tablename__ = 'bem'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    dh_inventario = Column(DateTime, nullable=True)
-    observacao = Column(String(255), nullable=True)
+    dh_inventory = Column(DateTime, nullable=True, name="dt_inventario" )
+    observation = Column(String(255), nullable=True, name="observacao")
 
     inventariante_id = Column(Integer, ForeignKey('inventariante.id'), nullable=True)
-    local_id = Column(Integer, ForeignKey('local.id'), nullable=True)
-    produto_id = Column(Integer, ForeignKey('produto.id'), nullable=True)
+    place_id = Column(Integer, ForeignKey('local.id'), nullable=True, name= "local_id")
+    product_id = Column(Integer, ForeignKey('produto.id'), nullable=True)
 
     #inventariante = relationship("User", back_populates="bens")
     #local = relationship("Place", back_populates="bens")

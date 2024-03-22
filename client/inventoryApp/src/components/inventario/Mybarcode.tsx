@@ -1,32 +1,41 @@
 import {
   View,
-  
   StyleSheet,
   Dimensions,
   Pressable,
   TextInput,
   useColorScheme,
-  
 } from "react-native";
-import React, {FC} from "react";
+import React, { FC } from "react";
 import { CameraView } from "expo-camera/next";
 import { AntDesign } from "@expo/vector-icons";
 import MyButton from "@/src/components/MyButton";
 import Colors from "@/constants/Colors";
+import { Item } from "@/src/model/item";
 
 const { width, height } = Dimensions.get("window");
 type Props = {
-    canUseCamera: boolean;
-    handleBarCodeScanned: (data: any) => void;
-    closeCBCamera: () => void;
-    setItem: (data: any) => void;
-    item: any;
-    };
-const MyBarCode : FC<Props> = ({ canUseCamera, handleBarCodeScanned, closeCBCamera, setItem, item  }) => {
-
-    const colorScheme = useColorScheme() || "light";
-const theme = colorScheme === "light" ? Colors.dark : Colors.light;
-const themeColorsInverted = colorScheme === "dark" ? Colors.light : Colors.dark;
+  canUseCamera: boolean;
+  handleBarCodeScanned: (data: any) => void;
+  closeCBCamera: () => void;
+  setItem: (data: any) => void;
+  item: Item;
+  getPatrimonyByBarCode?: (data: string | null) => Promise<void>;
+  editCodeBar?: boolean;
+};
+const MyBarCode: FC<Props> = ({
+  canUseCamera,
+  handleBarCodeScanned,
+  closeCBCamera,
+  setItem,
+  item,
+  getPatrimonyByBarCode,
+  editCodeBar,
+}) => {
+  const colorScheme = useColorScheme() || "light";
+  const theme = colorScheme === "light" ? Colors.dark : Colors.light;
+  const themeColorsInverted =
+    colorScheme === "dark" ? Colors.light : Colors.dark;
 
   return (
     <>
@@ -53,27 +62,33 @@ const themeColorsInverted = colorScheme === "dark" ? Colors.light : Colors.dark;
       </View>
       <View style={{ height: width / 10, marginTop: 5 }}>
         <TextInput
+          editable={editCodeBar}
           placeholder={`Digite o código de barras`}
           onChange={(data) =>
             setItem({ ...item, barcode: data.nativeEvent.text })
           }
-          value={item.barcode}
+          value={item.barcode?.toString()}
           keyboardType="numeric"
           style={styles.input}
           enablesReturnKeyAutomatically={true}
           placeholderTextColor={theme.placeholder}
         />
-        <Pressable
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 20,
-            zIndex: 1, // Para garantir que esteja na frente do TextInput
-          }}
-          onPress={() => console.log("chamando dados")}
-        >
-          <AntDesign name="reload1" size={20} color="black" />
-        </Pressable>
+        {item.barcode && (
+          <Pressable
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 20,
+              zIndex: 1, // Para garantir que esteja na frente do TextInput
+            }}
+            onPress={() =>
+              getPatrimonyByBarCode &&
+              getPatrimonyByBarCode(item.barcode?.toString() || null)
+            }
+          >
+            <AntDesign name="reload1" size={20} color="black" />
+          </Pressable>
+        )}
       </View>
     </>
   );
@@ -88,7 +103,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: "hidden",
-    
   },
   closeCameraView: {
     height: 50,
@@ -100,7 +114,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 25,
   },
-  input:{
+  input: {
     minWidth: 200,
     height: 40,
     borderColor: "gray",
@@ -111,5 +125,5 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-  }
+  },
 });

@@ -1,17 +1,18 @@
 import { StyleSheet, Text, View, Dimensions, Pressable } from "react-native";
 import React, { FC } from "react";
+import { Product } from "@/src/model/products";
 const { width, height } = Dimensions.get("window");
 
 type Props = {
-  item: any;
+  item: Product;
   setOnSelectSearchItem: (data: string) => void;
  
 };
 const MySearch: FC<Props> = ({ item, setOnSelectSearchItem }) => {
   return (
     <>
-      <Pressable onPress={()=>setOnSelectSearchItem(item.nome)}>
-        <Text style={styles.itemText}>{item.nome}</Text>
+      <Pressable onPress={()=>setOnSelectSearchItem(item.name)}>
+        <Text style={styles.itemText}>{item.name}</Text>
       </Pressable>
     </>
   );

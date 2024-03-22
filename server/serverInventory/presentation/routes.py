@@ -43,6 +43,7 @@ def get_all_products():
     products = use_cases.get_All_Products()
     return jsonify(products)
 
+
 @api_blueprint.route('/products/<int:product_id>', methods=['GET'])
 @jwt_required()
 def get_product_by_id(product_id):
@@ -52,5 +53,39 @@ def get_product_by_id(product_id):
 @api_blueprint.route('/products', methods=['POST'])
 @jwt_required()
 def create_product():
-    name = request.json.get('name')
-    # Lógica para criar um produto
+    
+    data = request.json    
+    product = use_cases.insert_product(data)   
+    return jsonify(product)
+
+@api_blueprint.route('/products/<int:product_id>', methods=['PUT'])
+@jwt_required()
+def update_product(product_id):
+    data = request.json
+    
+    return jsonify(use_cases.update_product(product_id, data))
+
+@api_blueprint.route('/patrimony', methods=['POST'])
+@jwt_required()
+def create_patrimony():
+    data = request.json
+    statusInsert = use_cases.insertPatrimony(data)    
+    return statusInsert    
+
+@api_blueprint.route('/patrimony/<int:patrimony_id>', methods=['GET'])
+@jwt_required()
+def get_patrimony_by_id(patrimony_id):
+    
+    return jsonify(use_cases.get_patrimony_by_id(patrimony_id))
+
+@api_blueprint.route('/patrimony/<int:patrimony_id>', methods=['PUT'])
+@jwt_required()
+def update_patrimony(patrimony_id):
+    data = request.json
+    return jsonify(use_cases.update_patrimony(patrimony_id, data))
+
+@api_blueprint.route('/property', methods=['POST'])
+@jwt_required()
+def create_property():
+    data = request.json
+    return jsonify(use_cases.insert_property(data))
