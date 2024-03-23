@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-
+from domain.entities.user import User
 
 class DatabaseAdapter:
   DB_URI='mysql+pymysql://root:root@localhost:3306/inventario2022'   
@@ -15,9 +15,11 @@ class DatabaseAdapter:
   def get_session(self ):
     return self.SessionLocal()
   
-  def get_user_by_barcode(self, barcode):
+  def get_users(self):
+   
     session = self.get_session()
-    user = session.execute(text(f"SELECT * FROM inventariante WHERE codigobarra = '{barcode}'")).fetchone()
+    user = session.query(User).all() 
+       
     session.close()
     return user
 

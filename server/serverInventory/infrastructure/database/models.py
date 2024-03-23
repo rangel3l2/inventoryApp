@@ -9,7 +9,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(255))
-    codigobarra = Column(Integer, unique=True)  
+    codigobarra = Column(String(255), unique=True)  
     cargo = Column(String(50))
     
     #patrimonios = relationship("Patrimony", back_populates="inventariante")

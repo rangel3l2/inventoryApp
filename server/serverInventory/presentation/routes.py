@@ -16,10 +16,11 @@ def authenticate():
         return jsonify({'success': False, 'error': 'Código de barras ausente'}), 400
 
     try:
-        expire_date=timedelta(seconds=36500)
+        expire_date=timedelta(seconds=31536000, )
       
-        user: User = authentication.authenticate_user(barcode)
-        access_token = create_access_token(identity={'id': user.id, 'name': user.nome, 'role': user.cargo}, expires_delta=expire_date)
+        user = authentication.authenticate_user(barcode)
+        
+        access_token = create_access_token(identity={'id': user['id'], 'name': user['name'], 'role': user['role']}, expires_delta=expire_date)
         
         return jsonify({'success': True,  'token': access_token})
 

@@ -2,6 +2,9 @@ from domain.exceptions.router_error import AuthError
 from domain.repositories.user_repository import UserRepository
 from infrastructure.adapters.database_adapter import DatabaseAdapter
 from main import app
+from middleware.utils_functions import check_password
+from domain.entities.user import User
+
 def authenticate_user(barcode):
     database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
       
@@ -11,13 +14,17 @@ def authenticate_user(barcode):
         user_repository = UserRepository(database_adapter)  # Certifique-se de passar o objeto do adaptador de banco de dados aqui
 
         # Chame o método get_user_by_barcode() na instância de UserRepository
-        user = user_repository.get_user_by_barcode(barcode)
+        users = user_repository.get_all_users()
+        for user in users:
+            if check_password(barcode, user['barcode']):
+                
+                return user
         
-        
-        if not user:
-            raise AuthError('Usuário não encontrado', 404)
+       
+        if not users:
+            raise AuthError('Usuários não encontrados', 404)
 
-        return user
+        return users
 
     except Exception as e:
         raise AuthError(f'Erro na autenticação: {str(e)}', 500)

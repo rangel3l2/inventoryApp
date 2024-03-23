@@ -2,7 +2,7 @@ from infrastructure.database.models import User, Product, Place
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 import csv
-
+from middleware.utils_functions import hash_password
 csv_file = './mockedData/userData.csv' 
 engine = create_engine('mysql+pymysql://root:root@localhost:3306/', echo=True)
 
@@ -22,8 +22,8 @@ with open(csv_file, 'r') as file:
     next(csv_reader)  # Pula o cabeçalho
     for row in csv_reader:
         try:
-            # Criar uma instância de User
-            user = User(nome=row[0], codigobarra=int(row[1].strip()), cargo=row[2].strip())
+            hashed_password = hash_password(row[1].strip())
+            user = User(nome=row[0], codigobarra=hashed_password, cargo=row[2].strip())
             # Adicionar o objeto User à sessão
             session.add(user)
             # Fazer o commit da transação
