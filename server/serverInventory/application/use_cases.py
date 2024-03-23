@@ -68,7 +68,11 @@ def update_product(product_id, product):
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         product_repository = ProductRepository(database_adapter)
         product = product_repository.update(product_id, product)
-        return product
+        if(product):            
+            return product
+        else:
+            return False
+    
     except Exception as e:
         raise e
     
@@ -81,20 +85,25 @@ def insertPatrimony(patrimony):
     
         for product in products_database:
             
-            if product['nome'] == patrimony['nome']:                             
-                patrimony['produto_id'] = product['id']
+            if product['name'] == patrimony['name']:                             
+                patrimony['produto_id'] = product['id']                
                 break
            
               
         if(patrimony['produto_id'] == None):
             
             print('Cadastro de produto não encontrado')
-            product=insert_product({"name":patrimony["nome"]})
+            product=insert_product({"name":patrimony["name"]})
             patrimony['produto_id'] = product['id']
-        patrimony = Patrimony(codbar=patrimony["codbar"],dt_inventario=patrimony["dt_inventario"], observacao= patrimony["observacao"],status=patrimony["status"],inventariante_id=patrimony["inventariante_id"],local_encontrado_id=patrimony["local_encontrado_id"], produto_id= patrimony["produto_id"])
+        patrimony = Patrimony(codbar=patrimony["codbar"],
+                              observacao= patrimony["observacao"],status=patrimony["status"],inventariante_id=patrimony["inventariante_id"],local_encontrado_id=patrimony["local_encontrado_id"], 
+                              produto_id= patrimony["produto_id"])
         patrimony = patrimony_repository.create(patrimony)
-        
-        return {'success': True, 'message': 'Patrimônio inserido com sucesso!'}
+        if(patrimony):
+            return patrimony
+        else:
+            return False
+     
     
     except Exception as e:
         raise e
@@ -117,9 +126,12 @@ def update_patrimony(patrimony_id, patrimony):
         product = update_product(patrimony['product_id']['id'], patrimony['product_id'])
         
         if product:         
-          
+            print('Produto atualizado com sucesso', product)
+            patrimony['product_id'] = product
+            patrimony['produto_id'] = product['id']
             patrimony = patrimony_repository.update(patrimony_id, patrimony)
-            patrimony['product_id'] = get_product_by_id(patrimony['produto_id'])
+            print('Patrimony atualizado com sucesso', patrimony)
+         
         return patrimony
     except Exception as e:
         raise e
@@ -133,6 +145,7 @@ def insert_property(property):
         if product:
             property['product_id'] = product['id']
             property.pop('product_name')
+           
             property = Property(**property)
             property = property_repository.insertProperty(property)
             product = get_product_by_id(property['product_id'])

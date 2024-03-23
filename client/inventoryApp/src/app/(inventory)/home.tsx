@@ -27,6 +27,7 @@ import MySearch from "@/src/components/inventario/MySearch";
 import extractUserIdFromToken from "@/src/utils/extractIdToken";
 import { Patrimony, PatrimonyModel } from "@/src/model/patrimony";
 import { Item } from "@/src/model/item";
+import { Property, PropertyModel } from "@/src/model/property";
 
 const { width, height } = Dimensions.get("window");
 
@@ -207,9 +208,32 @@ const home = () => {
   };
 
   const insertProperty = async () => {
-    if ((item.name, item.found_place_id, item.user_id, !item.barcode)) {
-      console.log("entrou");
-      console.log(item);
+    console.log("insert property entrou");
+    if ((item.name, item.found_place_id, item.user_id, !item.barcode, item.product_id)) {
+   
+      if (url_app && session?.token) {
+        try {
+          const url = url_app + "/property";
+          const property = PropertyModel.toJsonCreate(item as Item);
+          const response = await axios.post<Property>(url, property, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.token}`,
+            },
+          });
+          if (response.status === 200) {
+            console.log("Property created");
+            alert("Bem criado com sucesso");
+          }
+        } catch (error) {
+          console.error(`Error inserting property: ${error}`);
+          alert("Erro ao criar o Bem");
+        } finally {
+          clean_item();
+          setItemSearch("");
+          setOnSelectSearchItem("");
+        }
+      }
     }
   };
   const updatePatrimony = async () => {
@@ -251,33 +275,46 @@ const home = () => {
       setItemSearch("");
   
       setOnSelectSearchItem("");
-      setItem({
-        ...item,
-        barcode: null,
-        name: "",
-        status: "Selecione uma opção",
-        observation: "",
-      });
+      clean_item();
       canUseCamera ? setCanUseCamera(false) : setCanUseCamera(true);
     }
   };
   const insertPatrimony = async () => {
-    if ((item.name, item.found_place_id, item.user_id, item.barcode)) {
-      console.log("entrou");
-      console.log(item);
+   
+    if ((item.name, item.found_place_id, item.user_id, item.barcode, item.found_place_id)) {
+      console.log("insert patrimony entrou");
+      if (url_app && session?.token) {
+        try{
+
+        const url = url_app + "/patrimony";
+        const patrimony = PatrimonyModel.toJsonCreate(item as Item)
+        const response = await axios.post<Patrimony>(url, patrimony, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.token}`,
+          },
+        });
+        if (response.status === 200) {
+          console.log("Patrimony created");
+          alert("Patrimônio criado com sucesso");
+
+        }
+      }catch(error){
+        console.error(`Error inserting patrimony: ${error}`);
+        alert("Erro ao criar patrimônio");
+      }
+      finally{
+        clean_item();
+        setItemSearch("");  
+        setOnSelectSearchItem("");
+        
+      }
+      
+    }
     }
   };
-  const handleAdd = () => {
-    setCanEditCodeBar(true);
-    if (oldPatrimony.barcode !== item.barcode) {
-    } else {
-      insertPatrimony();
-    }
-    //erase logic
-    setCanEditCodeBar(true);
-    setItemSearch("");
 
-    setOnSelectSearchItem("");
+  const clean_item = () => {
     setItem({
       ...item,
       barcode: null,
@@ -285,6 +322,17 @@ const home = () => {
       status: "Selecione uma opção",
       observation: "",
     });
+  }
+
+  const handleAdd = () => {
+    if (canEditCodeBar && item.barcode) {
+      insertPatrimony();
+    }else if(canEditCodeBar && !item.barcode){
+      insertProperty();
+    } 
+    else {
+      updatePatrimony();
+    }
   };
 
   return (
@@ -416,7 +464,7 @@ const home = () => {
                 styleText={themeColorsInverted.text}
                 iconColor={themeColorsInverted.text}
                 title={canEditCodeBar ? "Salvar" : "Alterar"}
-                handlePress={updatePatrimony}
+                handlePress={handleAdd}
                 icon={"save"}
               />
             </View>

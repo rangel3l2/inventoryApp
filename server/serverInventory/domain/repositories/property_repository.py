@@ -1,6 +1,7 @@
 
 from sqlalchemy import  text
 from domain.entities.property import Property
+from datetime import datetime, timezone
 
 class PropertyRepository:
     def __init__(self, database_adapter):
@@ -31,6 +32,11 @@ class PropertyRepository:
         return property_to_dict
 
     def insertProperty(self, property : Property):
+        property.dh_inventory = self.get_formatted_date()
+        if type(property) is dict:
+            print('\nproperty is dict\n')
+            property['dh_inventory'] = self.get_formatted_date()
+            property = Property(**property)
         session = self.database_adapter.get_session()
         session.add(property)
         session.commit()
@@ -55,3 +61,11 @@ class PropertyRepository:
             session.commit()
             property_to_dict = property_updated.to_dict()
             return property_to_dict
+        
+        
+    def get_formatted_date(self):
+        now = datetime.now(timezone.utc).now()  
+        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+  
+        return formatted_date
+       

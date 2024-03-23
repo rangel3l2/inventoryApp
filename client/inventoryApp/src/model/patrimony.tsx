@@ -48,4 +48,14 @@ export class PatrimonyModel {
       product_id: data.product_id,
     };
   }
+  static toJsonCreate(data: Item): any {
+    return {
+      codbar: data.barcode || null,      
+      observacao: data.observation || "",  
+      status: data.status || "",
+      inventariante_id: data.user_id|| null,
+      local_encontrado_id: data.found_place_id || null,  
+      name: data.product_id?.name || "",
+    };
+  }
 }

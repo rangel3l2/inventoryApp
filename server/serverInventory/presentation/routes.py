@@ -68,9 +68,13 @@ def update_product(product_id):
 @api_blueprint.route('/patrimony', methods=['POST'])
 @jwt_required()
 def create_patrimony():
-    data = request.json
-    statusInsert = use_cases.insertPatrimony(data)    
-    return statusInsert    
+    try:
+        
+        data = request.json
+        statusInsert = use_cases.insertPatrimony(data) 
+        return jsonify({'success': statusInsert})   
+    except AuthError as e:
+        return jsonify({'success': False, 'error': e.message}), 401    
 
 @api_blueprint.route('/patrimony/<int:patrimony_id>', methods=['GET'])
 @jwt_required()

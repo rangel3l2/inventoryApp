@@ -46,7 +46,7 @@ class Patrimony(Base):
     local_encontrado_id = Column(Integer, ForeignKey('local.id'), nullable=True)
     local_id = Column(Integer, ForeignKey('local.id'), nullable=True)
     produto_id = Column(Integer, ForeignKey('produto.id'), nullable=True)
-
+    product_id = None
     #inventariante = relationship("User", back_populates="patrimonios")
     #local_encontrado = relationship("Place", back_populates="patrimonios_encontrados")
     #local = relationship("Place", back_populates="patrimonios")
@@ -62,7 +62,7 @@ class Property(Base):
     inventariante_id = Column(Integer, ForeignKey('inventariante.id'), nullable=True)
     place_id = Column(Integer, ForeignKey('local.id'), nullable=True, name= "local_id")
     product_id = Column(Integer, ForeignKey('produto.id'), nullable=True)
-
+    
     #inventariante = relationship("User", back_populates="bens")
     #local = relationship("Place", back_populates="bens")
     #produto = relationship("Product", back_populates="bens")

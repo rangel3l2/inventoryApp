@@ -23,6 +23,7 @@ class ProductRepository:
         return products  # Return the list of results
     
     def get_by_id(self, product_id):
+        
         session = self.database_adapter.get_session()
         product : Product = session.query(Product).filter_by(id=product_id).first()
         product_to_dict = product.to_dict()
@@ -40,11 +41,16 @@ class ProductRepository:
     
     
     def insertProduct(self, product : Product):
-        
+        if type(product) is dict:
+            product = Product(**product)
+            
         session = self.database_adapter.get_session()
+        product = Product(name=product.name)
         session.add(product)
         session.commit()
-        product_to_dict = product.to_dict()
+        product_uploaded = session.query(Product).filter_by(name=product.name).first()
+        product_uploaded = Product(id=product_uploaded.id, name=product_uploaded.name)
+        product_to_dict = product_uploaded.to_dict()
         session.close()
         
         return product_to_dict
@@ -52,25 +58,36 @@ class ProductRepository:
     def update(self,product_id, product: Product):
     
         session = self.database_adapter.get_session()
-        product_to_update : Product = session.query(Product).filter_by(id=product_id).first()
+        #logic to insert the product when update is called
+        #check if the product exists
+        all_products = session.query(Product).all()
         
-        if(product_to_update):           
+        for item in all_products:
+            
+            if item.name == product['name']:
+                print(f"Product with name {product['name']} already exists. na posição {item.id}")
+               
+                product_to_update : Product = session.query(Product).filter_by(id=item.id).first()
+        
+                if(product_to_update):           
             
            
-            product_to_update.name = product['name']
-            session.add(product_to_update)  
-            session.commit()
+                    product_to_update.name = item.name
+                    product_to_update.id = item.id
+                    session.add(product_to_update)  
+                    session.commit()
+                    
+                    updated_product = session.query(Product).filter_by(id=item.id).first()
+                    updated_product = Product(id=updated_product.id, name=updated_product.name)   
+                    updated_product = updated_product.to_dict()        
+                    session.close()
+                    print(f"Product with ID {product_id} updated.")
+                    return updated_product
             
-            updated_product = session.query(Product).filter_by(id=product_id).first()
-            updated_product = Product(id=updated_product.id, name=updated_product.name)   
-            updated_product = updated_product.to_dict()        
-            session.close()
-            print(f"Product with ID {product_id} updated.")
-            return updated_product
             
-        else:
-            
-            print(f"Product with ID {product_id} not found for update.")
-            return None
+                #insert new product e return insert product
+        print(f"Product with name {product['name']} not found for update.")
+        
+        return self.insertProduct(product)
     
     
