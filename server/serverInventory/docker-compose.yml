@@ -1,0 +1,41 @@
+services:
+  # nginx-app:
+  #   image: nginx
+  # node:
+  #   build:
+  #     dockerfile: ./docker/node.dockerfile
+  #     context: .
+  #   image: node
+  #   container_name: node_docker
+  #   ports:
+  #     - 3000:3000
+  #   #     networks:
+  #   #         - development-network
+  #   volumes:
+  #     - .:/home/node/app
+
+  #   depends_on:
+  #     - mysql
+
+  mysqldb:
+    image: mysql:latest
+    container_name: mysql_inventario
+    restart: always  # or "on-failure"
+
+    # networks:
+    #   - development-network
+    environment:      
+      MYSQL_DATABASE: inventario2022     
+      MYSQL_ROOT_PASSWORD: root
+
+    ports:
+      - '3306:3306'
+    volumes:
+      - /opt/mysql_data:/var/lib/mysql
+
+#   development-network:
+#     driver: bridge
+
+# volumes:
+#   mysql_data:
+#     driver: local

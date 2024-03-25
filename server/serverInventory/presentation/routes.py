@@ -11,7 +11,7 @@ api_blueprint = Blueprint('api', __name__)
 @api_blueprint.route('/auth', methods=['POST'])
 def authenticate():
     barcode = request.json.get('barcode')
-
+    barcode = str(barcode).strip() if barcode else None
     if not barcode:
         return jsonify({'success': False, 'error': 'Código de barras ausente'}), 400
 

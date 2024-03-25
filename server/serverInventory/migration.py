@@ -3,13 +3,21 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 import csv
 from middleware.utils_functions import hash_password
+from configurations import db
 csv_file = './mockedData/userData.csv' 
-engine = create_engine('mysql+pymysql://root:root@localhost:3306/', echo=True)
 
+db_host = db.get_db_host()
+db_port = db.get_db_port()
+db_user = db.get_db_user()
+db_password = db.get_db_password()
+db_name = db.get_db_name()
+db_secret_key_jwt = db.get_db_secret_key_jwt()
+
+
+engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 with engine.connect() as connection:
     connection.execute(text('create database if not exists inventario2022'))
-
-engine = create_engine('mysql+pymysql://root:root@localhost:3306/inventario2022', echo=True)   
+engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 User.metadata.create_all(engine)
 Product.metadata.create_all(engine)
 Place.metadata.create_all(engine)
