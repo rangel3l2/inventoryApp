@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum as EnumSQL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
+from domain.enums.enum_status import Status
 Base = declarative_base()
 
 class User(Base):
@@ -41,6 +41,7 @@ class Patrimony(Base):
     observacao = Column(String(255), nullable=True)
     responsavel = Column(String(255), nullable=True)
     setor_responsavel = Column(String(255), nullable=True)
+    #status = Column(EnumSQL(Status), nullable=True)
     status = Column(String(255), nullable=True)
     inventariante_id = Column(Integer, ForeignKey('inventariante.id'), nullable=True)
     local_encontrado_id = Column(Integer, ForeignKey('local.id'), nullable=True)

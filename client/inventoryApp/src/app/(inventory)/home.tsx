@@ -7,6 +7,7 @@ import {
   Dimensions,
   Pressable,
   useColorScheme,
+  Platform
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState, useRef } from "react";
@@ -24,11 +25,12 @@ import { useSession } from "@/src/auth/ctx";
 import { Product, ProductModel } from "@/src/model/products";
 import AutocompleteInput from "react-native-autocomplete-input";
 import MySearch from "@/src/components/inventario/MySearch";
-import extractUserIdFromToken from "@/src/utils/extractIdToken";
+import extractUserIdFromToken from "@/src/utils/extractDataToken";
 import { Patrimony, PatrimonyModel } from "@/src/model/patrimony";
 import { Item } from "@/src/model/item";
 import { Property, PropertyModel } from "@/src/model/property";
-
+import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 type data = {
@@ -43,6 +45,8 @@ const data = [
 ];
 
 const home = () => {
+  const router = useRouter();
+
   const { session } = useSession();
   const colorScheme = useColorScheme() || "light";
   const theme = colorScheme === "light" ? Colors.dark : Colors.light;
@@ -74,7 +78,10 @@ const home = () => {
   const [isActiveSearch, setIsActiveSearch] = useState(false);
   const [oldPatrimony, setOldPatrimony] = useState<any>("");
   const [onSelectSearchItem, setOnSelectSearchItem] = useState("");
-
+  //modal
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModal = () => setShowModal(true);
+  const handleHideModal = () => setShowModal(false);
   const [filteredNames, setFilteredNames] = useState([]);
 
   useEffect(() => {
@@ -85,18 +92,21 @@ const home = () => {
 
     async function getServerUrlAndItem() {
       try {
-        const urlData = await getServerUrl();
-        console.log(urlData.data);
-        setUrl_app(urlData.data);
-        const response2 = await axios.get<Product | any>(
-          urlData.data + "/products",
-          {
-            headers,
+        if (session) {
+          const urlData = await getServerUrl();
+          setUrl_app(urlData.data);
+          const response2 = await axios.get<Product | any>(
+            urlData.data + "/products",
+            {
+              headers,
+            }
+          );
+          if (response2.status === 200) {
+            setnames(response2.data);
+            console.log(names);
           }
-        );
-        if (response2.status === 200) {
-          setnames(response2.data);
-          console.log(names);
+        } else {
+          alert("Faça login para continuar");
         }
       } catch (error) {
         // Handle errors from getServerUrl or getItem
@@ -113,7 +123,7 @@ const home = () => {
         const sub_decode = await extractUserIdFromToken(
           session.token as string
         );
-        const user_id = sub_decode as any;
+        const {user_id} = sub_decode as any;
 
         setItem({ ...item, user_id: user_id });
       } catch (error) {
@@ -209,8 +219,7 @@ const home = () => {
 
   const insertProperty = async () => {
     console.log("insert property entrou");
-    if ((item.name, item.found_place_id, item.user_id, !item.barcode, item.product_id)) {
-   
+    if (item.name && item.found_place_id && item.user_id) {
       if (url_app && session?.token) {
         try {
           const url = url_app + "/property";
@@ -223,7 +232,12 @@ const home = () => {
           });
           if (response.status === 200) {
             console.log("Property created");
-            alert("Bem criado com sucesso");
+            setTimeout(() => {
+              router.replace(`/erroModal/?title=Sucesso&&id=${id}&&nome=${nome}` as any);
+             
+              
+            }, 0);
+            
           }
         } catch (error) {
           console.error(`Error inserting property: ${error}`);
@@ -240,20 +254,19 @@ const home = () => {
     try {
       if (!canEditCodeBar) {
         if (
-          (item.name &&
+          item.name &&
           item.found_place_id &&
-          item.user_id  &&
+          item.user_id &&
           item.barcode &&
           item.product_id &&
-          item.produto_id)
+          item.produto_id
         ) {
           if (url_app && session?.token) {
             const url = url_app + "/patrimony/" + item.barcode;
-            
-              item.product_id.name = item.name
-            ;
+
+            item.product_id.name = item.name;
             const patrimony = PatrimonyModel.toJson(item);
-          
+
             const response = await axios.put<Patrimony>(url, patrimony, {
               headers: {
                 "Content-Type": "application/json",
@@ -269,25 +282,21 @@ const home = () => {
       }
     } catch (error) {
       console.error(`Error updating patrimony: ${error}`);
-    }
-    finally{
+    } finally {
       setCanEditCodeBar(true);
       setItemSearch("");
-  
+
       setOnSelectSearchItem("");
       clean_item();
       canUseCamera ? setCanUseCamera(false) : setCanUseCamera(true);
     }
   };
   const insertPatrimony = async () => {
-   
-    if ((item.name, item.found_place_id, item.user_id, item.barcode, item.found_place_id)) {
-      console.log("insert patrimony entrou");
-      if (url_app && session?.token) {
-        try{
-
+    console.log("insert patrimony entrou");
+    if (url_app && session?.token) {
+      try {
         const url = url_app + "/patrimony";
-        const patrimony = PatrimonyModel.toJsonCreate(item as Item)
+        const patrimony = PatrimonyModel.toJsonCreate(item as Item);
         const response = await axios.post<Patrimony>(url, patrimony, {
           headers: {
             "Content-Type": "application/json",
@@ -297,20 +306,15 @@ const home = () => {
         if (response.status === 200) {
           console.log("Patrimony created");
           alert("Patrimônio criado com sucesso");
-
         }
-      }catch(error){
+      } catch (error) {
         console.error(`Error inserting patrimony: ${error}`);
         alert("Erro ao criar patrimônio");
-      }
-      finally{
+      } finally {
         clean_item();
-        setItemSearch("");  
+        setItemSearch("");
         setOnSelectSearchItem("");
-        
       }
-      
-    }
     }
   };
 
@@ -322,15 +326,14 @@ const home = () => {
       status: "Selecione uma opção",
       observation: "",
     });
-  }
+  };
 
   const handleAdd = () => {
     if (canEditCodeBar && item.barcode) {
       insertPatrimony();
-    }else if(canEditCodeBar && !item.barcode){
+    } else if (canEditCodeBar && !item.barcode) {
       insertProperty();
-    } 
-    else {
+    } else {
       updatePatrimony();
     }
   };
@@ -358,29 +361,26 @@ const home = () => {
               <Card.Title style={styles.title2}>Item:</Card.Title>
             </View>
             <AutocompleteInput
-              
               onPressIn={() => setIsActiveSearch(true)}
               placeholderTextColor={theme.placeholder}
               placeholder="Digite o nome do item"
               value={onSelectSearchItem ? onSelectSearchItem : itemSearch}
               data={filteredNames}
-              hideResults={onSelectSearchItem || itemSearch.length <=1 ? true : false}
-            
+              hideResults={
+                onSelectSearchItem || itemSearch.length <= 1 ? true : false
+              }
               onChangeText={(text) => {
-                if(text.length > 1){
-                
-                const filtered = filterNames(text, names);
-                setFilteredNames(filtered as any);
+                if (text.length > 1) {
+                  const filtered = filterNames(text, names);
+                  setFilteredNames(filtered as any);
                 }
-                
+
                 searchItemControl();
                 setItemSearch(text);
                 setItem({
                   ...item,
                   name: onSelectSearchItem ? onSelectSearchItem : text,
-                 
                 });
-                
               }}
               flatListProps={{
                 initialNumToRender: 10,
@@ -413,9 +413,9 @@ const home = () => {
               style={[styles.input, { backgroundColor: "#fffff0" }]}
               clearButtonMode="always"
             />
-            <View style={{ height: width / 10, marginTop: 5 }}>
-              <Card.Title style={styles.title2}>Status:</Card.Title>
-            </View>
+<View style={{ height: width / 10, marginTop: Platform.OS === "android" ? width / 9 : 5 }}>
+  <Card.Title style={styles.title2}>Status:</Card.Title>
+</View>
             <MySelect
               label={data[0].label}
               data={data}
@@ -515,7 +515,7 @@ const styles = StyleSheet.create({
   },
   input: {
     minWidth: 200,
-    height: 40,
+    height: width / 10,
 
     borderWidth: 1,
     margin: 10,

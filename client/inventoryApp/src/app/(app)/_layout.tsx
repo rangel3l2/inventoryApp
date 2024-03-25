@@ -17,41 +17,43 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme ?? "light"] || Colors.light;
-  const IconHome  = () => {
-    return <AntDesign name="home" size={24} color={themeColors.tabIconDefault} />;
+  const IconHome = () => {
+    return (
+      <AntDesign name="home" size={24} color={themeColors.tabIconDefault} />
+    );
   };
   const IconProfile = () => {
-    return <AntDesign name="profile" size={24} color={
-      themeColors.tabIconDefault
-    } />;
+    return (
+      <AntDesign name="profile" size={24} color={themeColors.tabIconDefault} />
+    );
   };
   return (
-    <Tabs 
+    <Tabs
       screenOptions={{
-        tabBarInactiveTintColor:  themeColors.tint,
-        tabBarStyle: { backgroundColor: themeColors.background, borderTopColor: themeColors.border, borderRadius: 20, borderTopWidth: 2},
+        tabBarInactiveTintColor: themeColors.tint,
+        tabBarStyle: {
+          backgroundColor: themeColors.background,
+          borderTopColor: themeColors.border,
+          borderRadius: 20,
+          borderTopWidth: 2,
+        },
         headerShown: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-        
           title: "Inicio",
           tabBarIcon: IconHome,
-          
-          
         }}
       />
-      <Tabs.Screen 
+      <Tabs.Screen
         name="Profile"
         options={{
-         
           title: "Perfil",
           tabBarIcon: IconProfile,
-          
-        }} />
+        }}
+      />
     </Tabs>
   );
 }
-

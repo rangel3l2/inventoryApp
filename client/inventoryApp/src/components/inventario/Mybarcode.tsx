@@ -62,6 +62,7 @@ const MyBarCode: FC<Props> = ({
       </View>
       <View style={{ height: width / 10, marginTop: 5 }}>
         <TextInput
+          returnKeyType="next"
           editable={editCodeBar}
           placeholder={`Digite o código de barras`}
           onChange={(data) =>
@@ -99,7 +100,7 @@ export default MyBarCode;
 const styles = StyleSheet.create({
   containerCamera: {
     width: "100%",
-    height: width / 2,
+    height: width / 2.5,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: "hidden",

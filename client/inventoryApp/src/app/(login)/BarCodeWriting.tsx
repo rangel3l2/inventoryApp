@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Pressable,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import { useSession } from "@/src/auth/ctx";
 import { useColorScheme } from "@/src/components/useColorScheme";
@@ -23,46 +24,66 @@ export default function BarcodeLogin() {
   const { signIn } = useSession();
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme ?? "light"] || Colors.light;
+  const [refreshing, setRefreshing] = useState(false);
   const handleSignIn = async () => {
-    const result = await signIn(barcode);
-    if (result.success) {
-      console.log(
-        "Autenticação bem-sucedida. Nome de usuário:",
-        
-        result.success
-      );
-     const message = "Você deseja manter a sessão ativa depois de entrar?";
-     navigation.replace(`/(login)/keepSessionModal?title=${message}` as any);
-    } else {
-      navigation.replace({pathname: '/(login)/errorModal', params:{title:'Error'}});
+    try {
+      setRefreshing(true);
+      const result = await signIn(barcode);
+
+      if (result.success) {
+        console.log(
+          "Autenticação bem-sucedida. Nome de usuário:",
+
+          result.success
+        );
+        const message = "Você deseja manter a sessão ativa depois de entrar?";
+        navigation.replace(`/(login)/keepSessionModal?title=${message}` as any);
+      } else {
+        navigation.replace({
+          pathname: "/(login)/errorModal",
+          params: { title: "Error" },
+        });
+      }
+    } catch (error) {
+      console.log("Erro ao tentar fazer login com o código de barras", error);
+    } finally {
+      setRefreshing(false);
     }
   };
 
   return (
     <>
-    <CustomHeader 
-      title="Codigo de Barras"
-      backTitle="Início"
-      typeNavigator="replace"
-      route={'/'} 
-    />
-    
-    <View style={[styles.container, {}]}>
-     
-      <TextInput
-        style={styles.input}
-        placeholder="Digite o código de barras"
-        onChangeText={(text) => setBarcode(text)}
-        keyboardType="numeric"
-        value={barcode}
-      />
-      <MyButton 
-        icon={"login"}
-        title={"Entrar"} 
-        handlePress={handleSignIn}
+      <CustomHeader
+        title="Codigo de Barras"
+        backTitle="Início"
         typeNavigator="replace"
-       />
-    </View>
+        route={"/"}
+      />
+
+      <View style={[styles.container, {}]}>
+        {refreshing ? (
+          <View>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text>Carregando...</Text>
+          </View>
+        ) : (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o código de barras"
+              onChangeText={(text) => setBarcode(text)}
+              keyboardType="numeric"
+              value={barcode}
+            />
+            <MyButton
+              icon={"login"}
+              title={"Entrar"}
+              handlePress={handleSignIn}
+              typeNavigator="replace"
+            />
+          </>
+        )}
+      </View>
     </>
   );
 }

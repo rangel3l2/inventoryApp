@@ -90,7 +90,8 @@ function RootLayoutNav({
            
             <Stack.Screen name= "(inventory)/home" options={{headerShown:false}}/>
             <Stack.Screen name="(login)" options={{headerShown:false}}/>
-            
+            <Stack.Screen name = "errorModal" options={{presentation: "transparentModal"}}/>
+            <Stack.Screen name = "informationModal" options={{presentation: "transparentModal"}}/>
            
           </Stack> : <Slot/>}
          

@@ -30,7 +30,8 @@ const CustomHeader: React.FC<CustomHeaderProps> = (props) => {
 
   return (
     <View style={[styles.headerContainer]}> 
-      <Pressable style={styles.backHeader} onPress={handleBackButtonPress}>
+      <Pressable style={styles.backHeader} onPress={handleBackButtonPress}
+       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
         <AntDesign name="left" size={20} color={colorText} />
         <Text style={[styles.headerBackTitle, { color: colorText }]}>{backTitle?backTitle:'Local'}</Text>
       </Pressable>

@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from presentation import routes
-
+from flask_cors import CORS
 app = Flask(__name__)
 
 # Configurar banco de dados e SQLAlchemy (substitua credenciais)
@@ -18,5 +18,6 @@ jwt = JWTManager(app)
 
 
 if __name__ == "__main__":
+  CORS(app)
   app.register_blueprint(routes.api_blueprint)
   app.run(debug=True, host='0.0.0.0')

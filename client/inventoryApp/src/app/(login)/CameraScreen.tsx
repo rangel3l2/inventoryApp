@@ -7,6 +7,7 @@ import { useSession } from "@/src/auth/ctx";
 import { useRouter } from "expo-router";
 
 export default function CameraScreen(props: any) {
+    const [refreshing, setRefreshing] = useState(true);
   const navigation = useRouter();
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [scanned, setScanned] = useState(false);
@@ -50,6 +51,7 @@ export default function CameraScreen(props: any) {
     return <Text>No access to camera</Text>;
   }
   const handleSignIn = async (data: string) => {
+
     const result = await signIn(data);
     if (result.success) {
       console.log(

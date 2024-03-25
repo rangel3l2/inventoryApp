@@ -16,8 +16,7 @@ const Profile = () => {
   };
   return (
     <View style={styles.container}>
-      <Text>{session?.name}</Text>
-      <Text>{session?.role}</Text>
+    
       <MyButton
         handlePress={handleSignOut}
         title={"Sair"}

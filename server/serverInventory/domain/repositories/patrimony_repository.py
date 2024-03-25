@@ -12,6 +12,7 @@ class PatrimonyRepository:
 
     def create(self, patrimony):
         try:
+            patrimony.dt_inventario = self.get_formatted_date()
             if type(patrimony) is dict:
                 patrimony['dt_inventario'] = self.get_formatted_date()
                 patrimony = Patrimony(**patrimony)
@@ -77,8 +78,9 @@ class PatrimonyRepository:
                                                                                        
                                             
                                             ) 
-                     
-            session.add(patrimony_to_update)
+            if patrimony['produto_id'] != patrimony_to_update.produto_id:
+                        
+                session.add(patrimony_to_update)
             session.commit()
             patrimony_updated = session.query(Patrimony).filter_by(codbar=codbar).first()
             patrimony_updated = Patrimony(codbar=patrimony_updated.codbar,dt_inventario=patrimony_updated.dt_inventario, 
