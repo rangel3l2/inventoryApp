@@ -7,7 +7,7 @@ import {
   Dimensions,
   Pressable,
   useColorScheme,
-  Platform
+  Platform,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState, useRef } from "react";
@@ -123,8 +123,8 @@ const home = () => {
         const sub_decode = await extractUserIdFromToken(
           session.token as string
         );
-        const {user_id} = sub_decode as any;
-
+        const { user_id } = sub_decode as any;
+          console.log("user_id", user_id)
         setItem({ ...item, user_id: user_id });
       } catch (error) {
         console.error("Error getting user id:", error);
@@ -233,11 +233,10 @@ const home = () => {
           if (response.status === 200) {
             console.log("Property created");
             setTimeout(() => {
-              router.replace(`/erroModal/?title=Sucesso&&id=${id}&&nome=${nome}` as any);
-             
-              
+              router.replace(
+                `/erroModal/?title=Sucesso&&id=${id}&&nome=${nome}` as any
+              );
             }, 0);
-            
           }
         } catch (error) {
           console.error(`Error inserting property: ${error}`);
@@ -276,6 +275,9 @@ const home = () => {
             if (response.status === 200) {
               console.log("Patrimony updated");
               alert("Patrimônio atualizado com sucesso");
+            }
+            else{
+              alert("Erro ao atualizar patrimônio");
             }
           }
         }
@@ -413,9 +415,14 @@ const home = () => {
               style={[styles.input, { backgroundColor: "#fffff0" }]}
               clearButtonMode="always"
             />
-<View style={{ height: width / 10, marginTop: Platform.OS === "android" ? width / 9 : 5 }}>
-  <Card.Title style={styles.title2}>Status:</Card.Title>
-</View>
+            <View
+              style={{
+                height: width / 10,
+                marginTop: Platform.OS === "android" ? width / 9 : 5,
+              }}
+            >
+              <Card.Title style={styles.title2}>Status:</Card.Title>
+            </View>
             <MySelect
               label={data[0].label}
               data={data}
