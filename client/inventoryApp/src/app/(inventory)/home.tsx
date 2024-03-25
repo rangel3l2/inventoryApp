@@ -8,6 +8,7 @@ import {
   Pressable,
   useColorScheme,
   Platform,
+  ScrollView
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState, useRef } from "react";
@@ -290,7 +291,7 @@ const home = () => {
 
       setOnSelectSearchItem("");
       clean_item();
-      canUseCamera ? setCanUseCamera(false) : setCanUseCamera(true);
+      
     }
   };
   const insertPatrimony = async () => {
@@ -341,7 +342,7 @@ const home = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView keyboardShouldPersistTaps="always" automaticallyAdjustKeyboardInsets style={styles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
         <CustomHeader title={nome ? nome : ""} typeNavigator="back" />
 
@@ -480,14 +481,14 @@ const home = () => {
           <Card.Divider />
         </Card>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 };
 
 export default home;
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
+  
     flex: 1,
     minHeight: height,
   },
