@@ -1,4 +1,4 @@
-from infrastructure.database.models import User, Product, Place
+from infrastructure.database.models import User, Product, Place, Status
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 import csv
@@ -21,6 +21,7 @@ engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_p
 User.metadata.create_all(engine)
 Product.metadata.create_all(engine)
 Place.metadata.create_all(engine)
+Status.metadata.create_all(engine)
 # Iniciar uma sessão
 session = Session(bind=engine)
 
@@ -76,6 +77,27 @@ with open(csv_file, 'r') as file:
             print(product)
             # Adicionar o objeto User à sessão
             session.add(product)
+            # Fazer o commit da transação
+            session.commit()
+        except Exception as e:
+            # Em caso de erro, fazer rollback
+            print("Erro ao inserir usuário:", e)
+            session.rollback()
+        finally:
+            # Fechar a sessão
+            session.close()
+
+csv_file = './mockedData/status.csv' 
+with open(csv_file, 'r') as file:
+    csv_reader = csv.reader(file)
+    next(csv_reader)  # Pula o cabeçalho
+    for row in csv_reader:
+        try:
+            # Criar uma instância de User
+            status = Status(id= int(row[0]),name=row[1])
+            print(status)
+            # Adicionar o objeto User à sessão
+            session.add(status)
             # Fazer o commit da transação
             session.commit()
         except Exception as e:
