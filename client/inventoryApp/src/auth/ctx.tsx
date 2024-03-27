@@ -44,8 +44,10 @@
       
       const subscription = AppState.addEventListener('change', nextAppState => {
         setIsForeground(nextAppState === 'active');
+        const active = nextAppState === 'active'
         
-        if (nextAppState === 'inactive' && !keepSession) {
+        
+        if (!active && !keepSession) {
           
           setSession(null);
           navigation.replace('/');
