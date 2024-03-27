@@ -3,11 +3,11 @@ import { Text, View, StyleSheet, Button, Dimensions } from "react-native";
 import { CameraView, Camera } from "expo-camera/next";
 import MyButton from "@/src/components/MyButton";
 const { width, height } = Dimensions.get("window");
-import { useSession } from "@/src/auth/ctx";
+
 import { useRouter } from "expo-router";
 
 export default function CameraScreen(props: any) {
-    const [refreshing, setRefreshing] = useState(true);
+
   const navigation = useRouter();
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [scanned, setScanned] = useState(false);
