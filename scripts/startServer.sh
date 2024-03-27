@@ -4,8 +4,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Define o caminho relativo para as pastas
-pasta1="$DIR/server/serverInventory"
-pasta2="$DIR/../pasta2"
+pasta1="$DIR/../server/serverInventory"
+
 
 # Função para entrar na pasta e ativar o ambiente virtual
 entrar_e_ativar() {
@@ -23,10 +23,6 @@ entrar_e_ativar "$pasta1"
 # Executar o script Python na primeira pasta
 executar_script_python
 
-# Entrar e ativar na segunda pasta
-entrar_e_ativar "$pasta2"
-# Executar o script Python na segunda pasta
-executar_script_python
 
 # Saída do ambiente virtual
 deactivate
