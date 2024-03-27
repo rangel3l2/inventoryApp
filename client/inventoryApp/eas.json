@@ -1,4 +1,6 @@
-{
+{   "cli":{
+      "requireCommit": true
+    },
     "build": {
       "preview": {
         "android": {
