@@ -1,4 +1,5 @@
 
+from domain.repositories.status_repository import StatusRepository
 from infrastructure.adapters.database_adapter import DatabaseAdapter
 from main import app
 from domain.repositories.place_repository import PlaceRepository
@@ -166,4 +167,11 @@ def insert_property(property):
     except Exception as e:
         raise e
 
- 
+def get_all_status():
+    try:
+        database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
+        status_repository = StatusRepository(database_adapter)
+        status = status_repository.get_all()
+        return status
+    except Exception as e:
+        raise e

@@ -1,10 +1,11 @@
-import React, { FC, useState } from 'react';
+import { Status } from '@/src/model/status';
+import React, { FC, useEffect, useState } from 'react';
 import { StyleSheet, View, Button,Text } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 
 type MySelectProps = {
-  data : any,
-  label : string, 
+  data : Status[],
+  
   onSelect?: (item: any) => void,
   initialValue : string
 
@@ -12,11 +13,15 @@ type MySelectProps = {
 
 }
 const MySelect : FC<MySelectProps>= (props) => {
-  const {data, label, initialValue, onSelect} = props;
-
+  const {data, initialValue, onSelect} = props;
+    useEffect(() => {
+      
+    },[])
   return(
     <View style={styles.container}>
-      <ModalSelector
+      {data&&<ModalSelector
+        keyExtractor={(item: Status) => item.id.toString()}
+        labelExtractor={(item: Status) => item.name}
         data={data}
         initValue={initialValue}
         onChange={onSelect as any}
@@ -25,7 +30,7 @@ const MySelect : FC<MySelectProps>= (props) => {
         
         
         
-      />
+      />}
     
     </View>
   )

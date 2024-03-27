@@ -1,38 +1,89 @@
-import React, { useContext } from "react";
-import { Pressable, Text, View, StyleSheet } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Pressable, Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import MyButton from "../../components/MyButton";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { FC } from "react";
 import { useSession } from "@/src/auth/ctx";
 
 const KeepSessionModal: FC<any> = ({ route }) => {
-  const { setKeepSession, setSession, signOut } = useSession(); // Access context values
+
+  const { setKeepSession, setSession, signOut , signIn } = useSession(); // Access context values
   const params = useLocalSearchParams();
+
   const navigation = useRouter();
   const title = params.title as string;
+  const barcode = params.barcode as string;
+  const [refreshing, setRefreshing] = useState(false);
+
+  
+
+  const handleSignIn = async () => {
+    try {
+      setRefreshing(true);
+      
+      
+      const result = await signIn(barcode);
+
+      if (result.success) {
+        console.log(
+          "Autenticação bem-sucedida. Nome de usuário:",
+
+          result.success
+          
+          
+        );
+        
+      
+      } else {
+        navigation.replace({
+          pathname: "/(login)/errorModal",
+          params: { title: "Error" },
+        });
+      }
+    } catch (error) {
+      console.log("Erro ao tentar fazer login com o código de barras", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const handleParentPress = () => {
     setSession(null);
-    navigation.replace({ pathname: "/" });
+    handleSignIn()
+   
     // Clear session on "Parent" press
 
   };
 
-  const handleSimPress = () => {
-    setKeepSession(true); // Set "keepSession" to true on "Sim" press
-    navigation.replace({ pathname: "/" }); // Navigate to desired path
+  const handleSimPress = async() => {
+    setKeepSession(true)
+    handleSignIn()
+   
+  
+    ; // Set "keepSession" to true on "Sim" press
+  
   };
 
   const handleNaoPress = () => {
     setKeepSession(false);
-    navigation.replace({ pathname: "/" }); // Logout and navigate to login
+    handleSignIn()
+   
   };
 
   return (
+  <>
+  {refreshing ? (
+    
+    <View style={styles.ActivityIndicator}>
+    <Text style={styles.localText}>Carregando ...</Text>
+    <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+     
+  ) : (
     <Pressable style={styles.container} onPress={handleParentPress}>
       {({ pressed }) => (
         <View style={styles.modal}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{title ? title : "Você deseja manter a sessão ativa depois de entrar?"}</Text>
           <View style={{ gap: 20 }}>
             <MyButton
               icon={"rightcircle"}
@@ -51,6 +102,9 @@ const KeepSessionModal: FC<any> = ({ route }) => {
         </View>
       )}
     </Pressable>
+  )}
+
+</>
   );
 };
 
@@ -85,6 +139,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  ActivityIndicator:{
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center'
+    
+  }
 });
 
 export default KeepSessionModal;

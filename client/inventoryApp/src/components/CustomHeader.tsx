@@ -27,9 +27,9 @@ const CustomHeader: React.FC<CustomHeaderProps> = (props) => {
   // Get color scheme and derive text color
   const colorScheme = useColorScheme() || 'light';
   const colorText = colorScheme === 'light' ? Colors.dark.text : Colors.light.text;
-
+  const background = colorScheme === 'light' ? Colors.light.background : Colors.dark.background;
   return (
-    <View style={[styles.headerContainer]}> 
+    <View style={[styles.headerContainer, {backgroundColor : background }]}> 
       <Pressable style={styles.backHeader} onPress={handleBackButtonPress}
        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
         <AntDesign name="left" size={20} color={colorText} />

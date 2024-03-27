@@ -28,6 +28,7 @@ export default function Home() {
   const { session } = useSession();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  
   const handleSelect = (item: Place) => {
     if (places) {
       setValue(item);
@@ -64,7 +65,7 @@ export default function Home() {
       throw error;
     }
     finally{
-      console.log("url", url);
+      //console.log("url", url);
     }
    
   };
@@ -80,7 +81,7 @@ export default function Home() {
         if (url) {
           const final_url = `${url}/places`;
           const final_url_str = final_url.trim();
-          console.log("final_url_str", final_url_str);
+          //console.log("final_url_str", final_url_str);
           setLoading(true);
           const response2 = await axios.get<Place | any>(final_url_str, {
             headers,

@@ -21,35 +21,10 @@ const MyParams = {
 export default function BarcodeLogin() {
   const navigation = useRouter();
   const [barcode, setBarcode] = useState("");
-  const { signIn } = useSession();
+  const { signIn, session } = useSession();
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme ?? "light"] || Colors.light;
-  const [refreshing, setRefreshing] = useState(false);
-  const handleSignIn = async () => {
-    try {
-      setRefreshing(true);
-      const result = await signIn(barcode);
 
-      if (result.success) {
-        console.log(
-          "Autenticação bem-sucedida. Nome de usuário:",
-
-          result.success
-        );
-        const message = "Você deseja manter a sessão ativa depois de entrar?";
-        navigation.replace(`/(login)/keepSessionModal?title=${message}` as any);
-      } else {
-        navigation.replace({
-          pathname: "/(login)/errorModal",
-          params: { title: "Error" },
-        });
-      }
-    } catch (error) {
-      console.log("Erro ao tentar fazer login com o código de barras", error);
-    } finally {
-      setRefreshing(false);
-    }
-  };
 
   return (
     <>
@@ -61,12 +36,7 @@ export default function BarcodeLogin() {
       />
 
       <View style={[styles.container, {}]}>
-        {refreshing ? (
-          <View>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text>Carregando...</Text>
-          </View>
-        ) : (
+      
           <>
             <TextInput
               style={styles.input}
@@ -78,11 +48,11 @@ export default function BarcodeLogin() {
             <MyButton
               icon={"login"}
               title={"Entrar"}
-              handlePress={handleSignIn}
+              route={`(login)/keepSessionModal?barcode=${barcode}`}
               typeNavigator="replace"
             />
           </>
-        )}
+      
       </View>
     </>
   );

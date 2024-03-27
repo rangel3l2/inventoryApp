@@ -6,6 +6,7 @@ from middleware import authentication
 from domain.entities.user import User
 from datetime import timedelta
 
+
 api_blueprint = Blueprint('api', __name__)
 
 @api_blueprint.route('/auth', methods=['POST'])
@@ -94,3 +95,13 @@ def update_patrimony(patrimony_id):
 def create_property():
     data = request.json
     return jsonify(use_cases.insert_property(data))
+
+@api_blueprint.route('/status', methods=['GET'])
+@jwt_required()
+def get_status():
+    try:
+        result = use_cases.get_all_status()
+        return result
+    except AuthError as e:
+        return jsonify({'success': False, 'error': e.message}), 401
+    

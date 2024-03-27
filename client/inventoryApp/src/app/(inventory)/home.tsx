@@ -1,6 +1,5 @@
 import {
-  View,
-  Text,
+  View,  
   StyleSheet,
   TextInput,
   Keyboard,
@@ -8,7 +7,8 @@ import {
   Pressable,
   useColorScheme,
   Platform,
-  ScrollView
+  ViewStyle
+ 
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState, useRef } from "react";
@@ -32,18 +32,9 @@ import { Item } from "@/src/model/item";
 import { Property, PropertyModel } from "@/src/model/property";
 import { useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
+import { Status } from "@/src/model/status";
 const { width, height } = Dimensions.get("window");
 
-type data = {
-  key: number;
-  label: string;
-};
-
-const data = [
-  { key: 1, label: "Devolvido" },
-  { key: 2, label: "Não encontrado" },
-  { key: 3, label: "Com defeito" },
-];
 
 const home = () => {
   const router = useRouter();
@@ -53,7 +44,7 @@ const home = () => {
   const theme = colorScheme === "light" ? Colors.dark : Colors.light;
   const themeColorsInverted =
     colorScheme === "dark" ? Colors.light : Colors.dark;
-  const [selectedValue, setSelectedValue] = useState<data | null>(null);
+  const [selectedValue, setSelectedValue] = useState<Status | null>(null);
   const [names, setnames] = useState([] as Product[]);
   const params = useLocalSearchParams();
   const { nome, id } = params as Place | any;
@@ -80,11 +71,9 @@ const home = () => {
   const [oldPatrimony, setOldPatrimony] = useState<any>("");
   const [onSelectSearchItem, setOnSelectSearchItem] = useState("");
   //modal
-  const [showModal, setShowModal] = useState(false);
-  const handleShowModal = () => setShowModal(true);
-  const handleHideModal = () => setShowModal(false);
+  
   const [filteredNames, setFilteredNames] = useState([]);
-
+  const [status, setStatus] = useState([] as Status[]);
   useEffect(() => {
     const headers = {
       "Content-Type": "application/json",
@@ -96,6 +85,7 @@ const home = () => {
         if (session) {
           const urlData = await getServerUrl();
           setUrl_app(urlData.data);
+
           const response2 = await axios.get<Product | any>(
             urlData.data + "/products",
             {
@@ -104,7 +94,8 @@ const home = () => {
           );
           if (response2.status === 200) {
             setnames(response2.data);
-            console.log(names);
+
+            //console.log(names);
           }
         } else {
           alert("Faça login para continuar");
@@ -114,10 +105,37 @@ const home = () => {
         console.error(`Error getting server URL or products: ${error}`);
       }
     }
+    const getStatus = async () => {
+      try {
+        if (session) {
+          const urlData = await getServerUrl();
+          setUrl_app(urlData.data);
 
+          const response = await axios.get<Status[] | any>(
+            urlData.data + "/status",
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session?.token}`,
+              },
+            }
+          );
+          if (response.status === 200) {
+            setStatus(response.data);
+            
+          }
+        }
+      } catch (error) {
+        console.error(`Error getting status: ${error}`);
+      }
+    };
+
+    getStatus();
     getServerUrlAndItem();
+
     get_user_id();
   }, []);
+
   const get_user_id = async () => {
     if (session) {
       try {
@@ -125,7 +143,7 @@ const home = () => {
           session.token as string
         );
         const { user_id } = sub_decode as any;
-          console.log("user_id", user_id)
+        //console.log("user_id", user_id)
         setItem({ ...item, user_id: user_id });
       } catch (error) {
         console.error("Error getting user id:", error);
@@ -145,9 +163,9 @@ const home = () => {
     );
   };
 
-  const onSelect = (data: data) => {
-    setItem({ ...item, status: data.label });
-    setSelectedValue(data);
+  const onSelect = (status: Status) => {
+    setItem({ ...item, status: status.name});
+    setSelectedValue(status);
   };
   const closeCBCamera = () => {
     setCanUseCamera(!canUseCamera ? true : false);
@@ -219,7 +237,6 @@ const home = () => {
   };
 
   const insertProperty = async () => {
-    console.log("insert property entrou");
     if (item.name && item.found_place_id && item.user_id) {
       if (url_app && session?.token) {
         try {
@@ -232,7 +249,7 @@ const home = () => {
             },
           });
           if (response.status === 200) {
-            console.log("Property created");
+            //console.log("Property created");
             setTimeout(() => {
               router.replace(
                 `/erroModal/?title=Sucesso&&id=${id}&&nome=${nome}` as any
@@ -274,10 +291,9 @@ const home = () => {
               },
             });
             if (response.status === 200) {
-              console.log("Patrimony updated");
+              //console.log("Patrimony updated");
               alert("Patrimônio atualizado com sucesso");
-            }
-            else{
+            } else {
               alert("Erro ao atualizar patrimônio");
             }
           }
@@ -291,11 +307,10 @@ const home = () => {
 
       setOnSelectSearchItem("");
       clean_item();
-      
     }
   };
   const insertPatrimony = async () => {
-    console.log("insert patrimony entrou");
+    //console.log("insert patrimony entrou");
     if (url_app && session?.token) {
       try {
         const url = url_app + "/patrimony";
@@ -307,7 +322,7 @@ const home = () => {
           },
         });
         if (response.status === 200) {
-          console.log("Patrimony created");
+          //console.log("Patrimony created");
           alert("Patrimônio criado com sucesso");
         }
       } catch (error) {
@@ -341,11 +356,14 @@ const home = () => {
     }
   };
 
-  return (
-    <ScrollView keyboardShouldPersistTaps="always" automaticallyAdjustKeyboardInsets style={styles.container}>
-      <Pressable onPress={() => Keyboard.dismiss()}>
-        <CustomHeader title={nome ? nome : ""} typeNavigator="back" />
 
+  return (
+    <View  
+      style={styles.container}
+    >
+      
+        <CustomHeader title={nome ? nome : ""} typeNavigator="back" />
+        <Pressable onPress={() => Keyboard.dismiss()}>
         <Card containerStyle={styles.containerCard}>
           <Card.Title style={styles.title}>Código de Barras:</Card.Title>
 
@@ -363,6 +381,8 @@ const home = () => {
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Item:</Card.Title>
             </View>
+            {Platform.OS === 'android' ?(<View>
+            <View style={styles.autoCompleteCssAndroid}>
             <AutocompleteInput
               onPressIn={() => setIsActiveSearch(true)}
               placeholderTextColor={theme.placeholder}
@@ -389,6 +409,63 @@ const home = () => {
                 initialNumToRender: 10,
 
                 style: {
+                  margin:1,
+                  backgroundColor: "#fffff0",
+                  height: width / 3,
+                  borderWidth: 0,
+                  borderRadius: 5,
+                  marginTop: 5,
+                  marginBottom: 5,
+                  width: width - 20,
+                  alignSelf: "center",
+                },
+                scrollEnabled: true,
+                onMagicTap: () => Keyboard.dismiss(),
+                keyExtractor: (item: Product) =>
+                  item.id ? item.id.toString() : "",
+                renderItem: ({ item }) => (
+                  <MySearch
+                    item={item}
+                    setOnSelectSearchItem={setOnSelectSearchItem}
+                  />
+                ),
+              }}
+              containerStyle={styles.autocompleteContainer}
+              inputContainerStyle={styles.autocompleteInputContainer}
+              
+              style={[styles.input, { backgroundColor: "#fffff0" }]}
+              clearButtonMode="always"
+            />
+            </View>
+            </View>
+            ):(
+              <AutocompleteInput
+              onPressIn={() => setIsActiveSearch(true)}
+              placeholderTextColor={theme.placeholder}
+              placeholder="Digite o nome do item"
+              value={onSelectSearchItem ? onSelectSearchItem : itemSearch}
+              data={filteredNames}
+              hideResults={
+                onSelectSearchItem || itemSearch.length <= 1 ? true : false
+              }
+              onChangeText={(text) => {
+                if (text.length > 1) {
+                  const filtered = filterNames(text, names);
+                  setFilteredNames(filtered as any);
+                }
+
+                searchItemControl();
+                setItemSearch(text);
+                setItem({
+                  ...item,
+                  name: onSelectSearchItem ? onSelectSearchItem : text,
+                });
+              }}
+              flatListProps={{
+                initialNumToRender: 10,
+
+                style: {
+                  margin:1,
                   backgroundColor: "#fffff0",
                   height: width / 3,
                   borderWidth: 1,
@@ -412,26 +489,28 @@ const home = () => {
               }}
               containerStyle={styles.autocompleteContainer}
               inputContainerStyle={styles.autocompleteInputContainer}
-              listContainerStyle={{ backgroundColor: "#fffff0" }}
+              
               style={[styles.input, { backgroundColor: "#fffff0" }]}
               clearButtonMode="always"
             />
+            )}
             <View
               style={{
                 height: width / 10,
-                marginTop: Platform.OS === "android" ? width / 9 : 5,
+                marginTop: Platform.OS === "android" ? width / 9 : width/22,
               }}
             >
               <Card.Title style={styles.title2}>Status:</Card.Title>
             </View>
-            <MySelect
-              label={data[0].label}
-              data={data}
-              onSelect={onSelect}
-              initialValue={item.status}
+            
+  <MySelect
+     // Safe access for initial value
+    data={status}
+    onSelect={onSelect}
+    initialValue={item.status}
+  />
 
-              // Passar o array de opções diretamente
-            />
+           
             <View style={{ height: width / 10, marginTop: 5 }}>
               <Card.Title style={styles.title2}>Observação:</Card.Title>
             </View>
@@ -481,16 +560,16 @@ const home = () => {
           <Card.Divider />
         </Card>
       </Pressable>
-    </ScrollView>
+    </View>
   );
 };
 
 export default home;
 const styles = StyleSheet.create({
   container: {
-  
     flex: 1,
     minHeight: height,
+    backgroundColor: "#fffff0",
   },
   containerCard: {
     backgroundColor: "#fffff0",
@@ -502,6 +581,7 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
+  
 
   title: {
     alignSelf: "flex-start",
@@ -558,6 +638,17 @@ const styles = StyleSheet.create({
   autocompleteListContainer: {
     borderColor: "gray",
     borderWidth: 1,
-    height: 100,
+    minHeight: 100,
   },
+  autoCompleteCssAndroid:{
+    position: Platform.OS === 'android' ? 'absolute' : undefined, 
+    backgroundColor : Platform.OS === 'android' ? '#fffff0' : '#fffff0',
+
+    zIndex : Platform.OS === 'android' ? 1 : 1,  
+    transform : Platform.OS === 'ios' ? 'translate3d(0, 0, 0)' : undefined,
+    flex : Platform.OS === 'ios' ? 1 : undefined,
+    width: '100%',
+    borderColor: "gray",    
+    borderBottomWidth:1
+  }
 });

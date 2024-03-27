@@ -1,14 +1,15 @@
-from dotenv import load_dotenv
-import os
+from dotenv import load_dotenv, get_key
 
-load_dotenv()
 
-db_host = os.getenv('DB_HOST')
-db_port = os.getenv('DB_PORT')
-db_user = os.getenv('DB_USER')
-db_password = os.getenv('DB_PASSWORD')
-db_name = os.getenv('DB_NAME')
-db_secret_key_jwt = os.getenv('DB_SECRET_KEY_JWT')
+load_dotenv(".env")
+
+
+db_host = get_key('.env', 'DB_HOST')
+db_port = get_key('.env', 'DB_PORT')
+db_user = get_key('.env', 'DB_USER')
+db_password = get_key('.env', 'DB_PASSWORD')
+db_name = get_key('.env', 'DB_NAME')
+db_secret_key_jwt = get_key('.env','SECRET_KEY_JWT')
 
 def get_db_host():
     return db_host

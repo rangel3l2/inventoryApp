@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from domain.entities.user import User
 from configurations import db
+from typing import Generator
 
 db_host = db.get_db_host()
 db_port = db.get_db_port()
@@ -16,13 +17,13 @@ class DatabaseAdapter:
   print(DB_URI)
   def __init__(self, connection_string = DB_URI):
     try:
-        self.engine = create_engine(connection_string,echo=True )   
+        self.engine = create_engine(connection_string,echo=True, pool_pre_ping=True )   
          
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
     except Exception as e:
         raise e
 
-  def get_session(self ):
+  def get_session(self ) -> Generator[sessionmaker, None, None]:
     return self.SessionLocal()
   
   def get_users(self):

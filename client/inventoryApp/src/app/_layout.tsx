@@ -67,7 +67,7 @@ function RootLayoutNav({
 
   useEffect(() => {
     if (session) {
-      navigation.replace("/(app)");
+      navigation.replace("/(app)/");
     } else {
       navigation.replace("/(login)");
     }

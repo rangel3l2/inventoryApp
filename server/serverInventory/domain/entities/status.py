@@ -1,5 +1,6 @@
+from infrastructure.database.models import Status as StatusModel
 
-class Status():
+class Status(StatusModel):
     def __init__(self, id, name):
         self.id = id
         self.name = name
