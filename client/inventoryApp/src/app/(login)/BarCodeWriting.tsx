@@ -37,7 +37,7 @@ export default function BarcodeLogin() {
 
       <View style={[styles.container, {}]}>
       
-          <>
+          
             <TextInput
               style={styles.input}
               placeholder="Digite o código de barras"
@@ -51,7 +51,7 @@ export default function BarcodeLogin() {
               route={`(login)/keepSessionModal?barcode=${barcode}`}
               typeNavigator="replace"
             />
-          </>
+        
       
       </View>
     </>
