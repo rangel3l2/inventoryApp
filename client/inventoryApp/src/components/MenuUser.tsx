@@ -12,7 +12,7 @@ export default function MenuButtons() {
         typeNavigator='push'
         title= {'Entrar'}
         icon={'right'}
-        route = {'CameraScreen'}
+        route = {'/CameraScreen'}
       />
     </View>
   )

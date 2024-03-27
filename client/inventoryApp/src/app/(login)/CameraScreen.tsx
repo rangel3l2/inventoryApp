@@ -12,7 +12,7 @@ export default function CameraScreen(props: any) {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [scanned, setScanned] = useState(false);
 
-  const { signIn, session } = useSession();
+
 
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -20,15 +20,7 @@ export default function CameraScreen(props: any) {
       setHasPermission(status === "granted");
     };
     getCameraPermissions();
-
-    const timer = setTimeout(() => {
-      if (!session) {
-        navigation.back;
-      }
-    }, 15000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  },[])
 
   const handleBarCodeScanned = ({
     type,
@@ -38,11 +30,8 @@ export default function CameraScreen(props: any) {
     data: string;
   }) => {
     setScanned(true);
-    handleSignIn(data);
-    if (session) {
-      navigation.replace("/");
-    }
-  };
+    
+    navigation.replace(`(login)/keepSessionModal?barcode=${data}` as any);
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -50,23 +39,10 @@ export default function CameraScreen(props: any) {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  const handleSignIn = async (data: string) => {
 
-    const result = await signIn(data);
-    if (result.success) {
-      console.log(
-        "Autenticação bem-sucedida. Nome de usuário:",
-      
-      );
-      const message = "Você deseja manter a sessão ativa depois de entrar?";
-      navigation.replace(`/(login)/keepSessionModal?title=${message}` as any);
-    } else {
-      navigation.replace({
-        pathname: "/(login)/errorModal",
-        params: { title: "Error" },
-      });
-    }
   };
+
+
 
   return (
     <View style={styles.container}>
