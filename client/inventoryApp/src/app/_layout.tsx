@@ -86,7 +86,7 @@ function RootLayoutNav({
           value={{ ...theme, colors: Colors[colorScheme ?? "light"] }}
         >
          {session? <Stack screenOptions={{headerShown: false}}>
-            <Stack.Screen name="(app)/confirmationModal" options={{presentation: "transparentModal"}} />
+            <Stack.Screen name="(components)/confirmationModal" options={{presentation: "transparentModal"}} />
            
             <Stack.Screen name= "(inventory)/home" options={{headerShown:false}}/>
             <Stack.Screen name="(login)" options={{headerShown:false}}/>
