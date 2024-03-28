@@ -65,14 +65,7 @@ function RootLayoutNav({
   const navigation = useRouter();
   const { session } = useSession();
 
-  useEffect(() => {
-    if (session) {
-      navigation.replace("/(app)/");
-    } else {
-      navigation.replace("/(login)");
-    }
-  }, [session, navigation]);
-
+ 
   const theme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
   const backgroundColor =
     colorScheme === "light" ? Colors.light.background : Colors.dark.background;

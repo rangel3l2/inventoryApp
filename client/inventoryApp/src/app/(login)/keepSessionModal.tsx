@@ -32,6 +32,7 @@ const KeepSessionModal: FC<any> = ({ route }) => {
           
           
         );
+        navigation.replace('/(app)/')
         
       
       } else {
@@ -49,6 +50,7 @@ const KeepSessionModal: FC<any> = ({ route }) => {
 
   const handleParentPress = () => {
     setSession(null);
+    setKeepSession(false);
     handleSignIn()
    
     // Clear session on "Parent" press
