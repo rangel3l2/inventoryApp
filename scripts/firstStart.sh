@@ -15,8 +15,8 @@ fi
 
 # Install the required packages
 #make script executable
-chmod +x scripts/startServer.sh
-chmod +x scripts/startFrontend.sh
+chmod +x startServer.sh
+chmod +x startFrontend.sh
 
 # Diretório atual onde o script está localizado
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -32,13 +32,14 @@ executar_script_node() {
 #execute the function
 executar_script_node
 #execute docker-compose-file
-docker-compose up --build &
+docker-compose up -d
 #execute ambienteVirtual
-entrar_e_ativar() {
+criar_entrar_e_ativar() {
     cd "$backendfolder"  # Entra na pasta fornecida como argumento
+    python3 -m venv venv
     source ./venv/bin/activate  # Ativa o ambiente virtual
 }
-entrar_e_ativar
+criar_entrar_e_ativar
 #Install required dependencies
 install_requirements(){
   pip install -r requirements.txt
@@ -46,7 +47,7 @@ install_requirements(){
 install_requirements
 #execute function for set migrations to feed database
 executar_migrations_database() {
-    cd "$backendfolder"
+#     cd "$backendfolder"
     python3 migration.py &
    
 }
