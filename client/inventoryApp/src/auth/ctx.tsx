@@ -45,9 +45,9 @@
       const subscription = AppState.addEventListener('change', nextAppState => {
         setIsForeground(nextAppState === 'active');
         const active = nextAppState === 'active'
+        console.log(session)
         
-        
-        if (!active && !keepSession && session) {
+        if (!active && !keepSession) {
           console.log('Sessão expirada');
           setSession(null);
           navigation.replace('/');
@@ -55,7 +55,7 @@
       });
     
       return () => subscription.remove();
-    }, [keepSession]);
+    }, [keepSession, session]);
       
     async function signIn(barcode: string) {
       
