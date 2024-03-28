@@ -1,5 +1,5 @@
 #you must to have python 3.6 or higher installed on your machine
-if command -v python &> /dev/null; then
+if command -v python3 &> /dev/null; then
   echo "Python is installed."
 else
   echo "Python is not installed."
@@ -33,6 +33,17 @@ executar_script_node() {
 executar_script_node
 #execute docker-compose-file
 docker-compose up --build &
+#execute ambienteVirtual
+entrar_e_ativar() {
+    cd "$backendfolder"  # Entra na pasta fornecida como argumento
+    source ./venv/bin/activate  # Ativa o ambiente virtual
+}
+entrar_e_ativar
+#Install required dependencies
+install_requirements(){
+  pip install -r requirements.txt
+}
+install_requirements
 #execute function for set migrations to feed database
 executar_migrations_database() {
     cd "$backendfolder"
@@ -41,7 +52,11 @@ executar_migrations_database() {
 }
 #execute the function
 executar_migrations_database
-#open scripts for start the server
-./scripts/startServer.sh
+#execute python server
+active_python_server(){
+  python3 main.py &
+}
+active_python_server
+
 #open scripts for start the frontend
 ./scripts/startFrontend.sh

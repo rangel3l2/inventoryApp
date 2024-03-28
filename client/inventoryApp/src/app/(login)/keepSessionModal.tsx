@@ -32,7 +32,7 @@ const KeepSessionModal: FC<any> = ({ route }) => {
           
           
         );
-        navigation.replace('/(app)/')
+        navigation.replace('/')
         
       
       } else {
