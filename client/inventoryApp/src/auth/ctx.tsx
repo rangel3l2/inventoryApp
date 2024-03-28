@@ -47,8 +47,8 @@
         const active = nextAppState === 'active'
         
         
-        if (!active && !keepSession) {
-          
+        if (!active && !keepSession && session) {
+          console.log('Sessão expirada');
           setSession(null);
           navigation.replace('/');
         }

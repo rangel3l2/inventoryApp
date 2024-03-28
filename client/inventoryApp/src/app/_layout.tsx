@@ -65,7 +65,14 @@ function RootLayoutNav({
   const navigation = useRouter();
   const { session } = useSession();
 
- 
+  useEffect(() => {
+    if (session) {
+      navigation.replace("/(app)/");
+    } else {
+      navigation.replace("/(login)");
+    }
+  }, [session, navigation]);
+
   const theme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
   const backgroundColor =
     colorScheme === "light" ? Colors.light.background : Colors.dark.background;
@@ -78,7 +85,7 @@ function RootLayoutNav({
         <ThemeProvider
           value={{ ...theme, colors: Colors[colorScheme ?? "light"] }}
         >
-         {!session? <Stack screenOptions={{headerShown: false}}>
+         {session? <Stack screenOptions={{headerShown: false}}>
             <Stack.Screen name="(components)/confirmationModal" options={{presentation: "transparentModal"}} />
            
             <Stack.Screen name= "(inventory)/home" options={{headerShown:false}}/>
