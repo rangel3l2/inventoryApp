@@ -15,6 +15,5 @@ const serverAdressConnection = () => {
    return serverAdress
 }
 
-export default serverAdressConnection
+export {serverAdressConnection}
 
-const styles = StyleSheet.create({})
