@@ -4,10 +4,11 @@ import MyButton from "../../components/MyButton";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { FC } from "react";
 import { useSession } from "@/src/auth/ctx";
-
+import { useKeepSession } from "@/src/context/keepSessionContext";
 const KeepSessionModal: FC<any> = ({ route }) => {
 
-  const { setKeepSession, setSession, signOut , signIn } = useSession(); // Access context values
+  const { setSession, signOut , signIn } = useSession(); // Access context values
+  const {setKeepSession } = useKeepSession(); // Access context values
   const params = useLocalSearchParams();
 
   const navigation = useRouter();

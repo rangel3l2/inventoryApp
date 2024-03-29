@@ -7,6 +7,7 @@ import { useColorScheme } from "@/src/components/useColorScheme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AntDesign } from "@expo/vector-icons";
 
+import { KeepSessionProvider } from "../../context/keepSessionContext";
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
@@ -28,6 +29,7 @@ export default function TabLayout() {
     );
   };
   return (
+    <KeepSessionProvider>
     <Tabs
       screenOptions={{
         tabBarInactiveTintColor: themeColors.tint,
@@ -56,5 +58,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </KeepSessionProvider>
   );
 }
