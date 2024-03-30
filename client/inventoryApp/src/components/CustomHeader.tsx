@@ -1,7 +1,7 @@
 import { Text, View, Button, StyleSheet, Pressable, useColorScheme } from 'react-native';
 import { useRouter } from 'expo-router';
 import { AntDesign } from "@expo/vector-icons";
-import Colors from '../../constants/Colors';
+import Colors from '../constants/Colors';
 
 
 interface CustomHeaderProps {

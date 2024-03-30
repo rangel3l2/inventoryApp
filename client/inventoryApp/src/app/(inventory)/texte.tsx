@@ -16,7 +16,7 @@ import CustomHeader from "@/src/components/CustomHeader";
 import { useLocalSearchParams } from "expo-router";
 import { Card } from "@rneui/themed";
 import MyButton from "@/src/components/MyButton";
-import Colors from "@/constants/Colors";
+import Colors from "@/src/constants/Colors";
 import MySelect from "@/src/components/inventario/MySelect";
 import { getServerUrl } from "@/src/utils/conectionServer";
 import axios from "axios";

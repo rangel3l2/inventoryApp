@@ -13,9 +13,10 @@ import { useColorScheme } from "@/src/components/useColorScheme";
 import { useSession } from "../auth/ctx";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
-import Colors, { ColorScheme } from "@/constants/Colors";
+import Colors, { ColorScheme } from "@/src/constants/Colors";
 import { useRouter } from "expo-router";
 import { KeepSessionProvider } from "../context/keepSessionContext";
+import Loading from "../components/Loading";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -41,7 +42,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <Loading />;
   }
 
   return (
@@ -79,15 +80,14 @@ function RootLayoutNav({}: propsRootLayoutNav) {
   return (
     <SafeAreaProvider>
       <SafeAreaView
+        edges={["top"]}
         style={[styles.container, { backgroundColor: backgroundColor }]}
       >
         <ThemeProvider
           value={{ ...theme, colors: Colors[colorScheme ?? "light"] }}
         >
-           <KeepSessionProvider>
-          {session ? 
-            
-           
+          <KeepSessionProvider>
+            {session ? (
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen
                   name="(components)/confirmationModal"
@@ -107,23 +107,14 @@ function RootLayoutNav({}: propsRootLayoutNav) {
                   name="informationModal"
                   options={{ presentation: "transparentModal" }}
                 />
-                <Stack.Screen
-                  name="(app)"
-                  
-                 
-                />
+                <Stack.Screen name="(app)" />
               </Stack>
-             
-           
-           : 
-            
-            <Stack>
-              <Stack.Screen name="(login)" options={{ headerShown: false }} />
-              
-            </Stack>
-           
-          }
-           </KeepSessionProvider>
+            ) : (
+              <Stack>
+                <Stack.Screen name="(login)" options={{ headerShown: false }} />
+              </Stack>
+            )}
+          </KeepSessionProvider>
         </ThemeProvider>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -133,5 +124,7 @@ function RootLayoutNav({}: propsRootLayoutNav) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 0,
+    paddingBottom: 0,
   },
 });

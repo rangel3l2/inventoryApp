@@ -1,7 +1,7 @@
 import { View, Text, useColorScheme } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
-import Colors from '@/constants/Colors'
+import Colors from '@/src/constants/Colors'
 
 const _layoutScreens = () => {
   type ColorScheme = 'light' | 'dark';

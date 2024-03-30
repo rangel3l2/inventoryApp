@@ -16,7 +16,7 @@ import CustomHeader from "@/src/components/CustomHeader";
 import { useLocalSearchParams } from "expo-router";
 import { Card } from "@rneui/themed";
 import MyButton from "@/src/components/MyButton";
-import Colors from "@/constants/Colors";
+import Colors from "@/src/constants/Colors";
 import MySelect from "@/src/components/inventario/MySelect";
 import { getServerUrl } from "@/src/utils/conectionServer";
 import axios from "axios";
@@ -311,10 +311,12 @@ const home = () => {
   };
   const insertPatrimony = async () => {
     //console.log("insert patrimony entrou");
-    if (url_app && session?.token) {
+    if (url_app && session?.token && item.name && item.barcode ) {
+      
       try {
         const url = url_app + "/patrimony";
         const patrimony = PatrimonyModel.toJsonCreate(item as Item);
+        console.log(patrimony, "patrimony")
         const response = await axios.post<Patrimony>(url, patrimony, {
           headers: {
             "Content-Type": "application/json",
@@ -347,6 +349,7 @@ const home = () => {
   };
 
   const handleAdd = () => {
+    
     if (canEditCodeBar && item.barcode) {
       insertPatrimony();
     } else if (canEditCodeBar && !item.barcode) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { useColorScheme } from '@/src/components/useColorScheme';
-import Colors from '../../constants/Colors';
+import Colors from '../constants/Colors';
 import { useRouter } from 'expo-router';
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from '@expo/vector-icons';

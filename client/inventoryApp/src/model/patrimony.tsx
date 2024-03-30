@@ -55,7 +55,7 @@ export class PatrimonyModel {
       status: data.status || "",
       inventariante_id: data.user_id|| null,
       local_encontrado_id: data.found_place_id || null,  
-      name: data.product_id?.name || "",
+      name: data.name,
     };
   }
 }

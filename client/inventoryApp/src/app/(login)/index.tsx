@@ -3,7 +3,7 @@ import React from 'react'
 import Header from '@/src/components/Header'
 import MenuButtons from '@/src/components/MenuUser'
 import { useColorScheme } from '@/src/components/useColorScheme';
-import Colors from '@/constants/Colors';
+import Colors from '@/src/constants/Colors';
 
 const LoginScreen = () => {
   const colorScheme = useColorScheme()

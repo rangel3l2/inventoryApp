@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import { useSession } from "@/src/auth/ctx";
 import { useColorScheme } from "@/src/components/useColorScheme";
-import Colors from "@/constants/Colors";
+import Colors from "@/src/constants/Colors";
 import MyButton from "@/src/components/MyButton";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import CustomHeader from "@/src/components/CustomHeader";
 const MyParams = {
   title: "Error",
@@ -21,10 +21,18 @@ const MyParams = {
 export default function BarcodeLogin() {
   const navigation = useRouter();
   const [barcode, setBarcode] = useState("");
-  const { signIn, session } = useSession();
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme ?? "light"] || Colors.light;
+  const handlePress = () => {
+   
+    if (barcode.length<=1 || barcode.length === 13) {
+      navigation.replace(`/(login)/errorModal?title=Esse campo de ter código de barra válido` as any);
+    }else{
+      navigation.replace(`(login)/keepSessionModal?barcode=${barcode}` as any);
+    }
+ 
 
+  }
 
   return (
     <>
@@ -38,7 +46,7 @@ export default function BarcodeLogin() {
       <View style={[styles.container, {}]}>
       
           
-            <TextInput
+           <TextInput
               style={styles.input}
               placeholder="Digite o código de barras"
               onChangeText={(text) => setBarcode(text)}
@@ -48,7 +56,7 @@ export default function BarcodeLogin() {
             <MyButton
               icon={"login"}
               title={"Entrar"}
-              route={`(login)/keepSessionModal?barcode=${barcode}`}
+              handlePress={handlePress}             
               typeNavigator="replace"
             />
         

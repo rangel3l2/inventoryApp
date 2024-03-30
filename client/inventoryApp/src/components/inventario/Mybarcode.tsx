@@ -10,7 +10,7 @@ import React, { FC } from "react";
 import { CameraView } from "expo-camera/next";
 import { AntDesign } from "@expo/vector-icons";
 import MyButton from "@/src/components/MyButton";
-import Colors from "@/constants/Colors";
+import Colors from "@/src/constants/Colors";
 import { Item } from "@/src/model/item";
 
 const { width, height } = Dimensions.get("window");
