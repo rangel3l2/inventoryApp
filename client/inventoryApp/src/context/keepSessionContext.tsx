@@ -29,7 +29,7 @@ export function useKeepSession() {
 export function KeepSessionProvider(props: React.PropsWithChildren) { 
   const {setSession} =  useSession() 
   const [isForeground, setIsForeground] = useState(AppState.currentState === 'active');
-  const [keepSession, setKeepSession] = useState(false)
+  const [keepSession, setKeepSession] = useState(true)
   const navigation = useRouter();
 
   useEffect(() => {
@@ -37,7 +37,8 @@ export function KeepSessionProvider(props: React.PropsWithChildren) {
     const subscription = AppState.addEventListener('change', nextAppState => {
       setIsForeground(nextAppState === 'active');
       const active = nextAppState === 'active'
-      
+      console.log('active', active)
+      console.log('keepSession', keepSession)
       if (!active && !keepSession) {
         console.log('Sessão expirada');
         setSession(null);

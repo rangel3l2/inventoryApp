@@ -6,6 +6,7 @@ import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AntDesign } from "@expo/vector-icons";
+import { BottomNavigation } from "react-native-paper";
 
 import { KeepSessionProvider } from "../../context/keepSessionContext";
 function TabBarIcon(props: {
@@ -29,7 +30,6 @@ export default function TabLayout() {
     );
   };
   return (
-    <KeepSessionProvider>
     <Tabs
       screenOptions={{
         tabBarInactiveTintColor: themeColors.tint,
@@ -39,6 +39,12 @@ export default function TabLayout() {
           borderRadius: 20,
           borderTopWidth: 2,
         },
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: "bold",
+          marginBottom: 5,
+        },
+
         headerShown: false,
       }}
     >
@@ -50,14 +56,14 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        
         name="Profile"
         options={{
           title: "Perfil",
           tabBarIcon: IconProfile,
         }}
       />
+ 
+      
     </Tabs>
-    </KeepSessionProvider>
   );
 }

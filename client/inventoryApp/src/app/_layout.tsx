@@ -15,6 +15,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import Colors, { ColorScheme } from "@/constants/Colors";
 import { useRouter } from "expo-router";
+import { KeepSessionProvider } from "../context/keepSessionContext";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -56,9 +57,7 @@ type propsRootLayoutNav = {
   initialScreenName: string;
   setInitialScreenName: React.Dispatch<React.SetStateAction<string>>;
 };
-function RootLayoutNav({
-
-}: propsRootLayoutNav) {
+function RootLayoutNav({}: propsRootLayoutNav) {
   type ColorScheme = "light" | "dark";
 
   const colorScheme: ColorScheme = useColorScheme() || "light";
@@ -85,16 +84,46 @@ function RootLayoutNav({
         <ThemeProvider
           value={{ ...theme, colors: Colors[colorScheme ?? "light"] }}
         >
-         {session? <Stack screenOptions={{headerShown: false}}>
-            <Stack.Screen name="(components)/confirmationModal" options={{presentation: "transparentModal"}} />
+           <KeepSessionProvider>
+          {session ? 
+            
            
-            <Stack.Screen name= "(inventory)/home" options={{headerShown:false}}/>
-            <Stack.Screen name="(login)" options={{headerShown:false}}/>
-            <Stack.Screen name = "errorModal" options={{presentation: "transparentModal"}}/>
-            <Stack.Screen name = "informationModal" options={{presentation: "transparentModal"}}/>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen
+                  name="(components)/confirmationModal"
+                  options={{ presentation: "transparentModal" }}
+                />
+
+                <Stack.Screen
+                  name="(inventory)/home"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="(login)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="errorModal"
+                  options={{ presentation: "transparentModal" }}
+                />
+                <Stack.Screen
+                  name="informationModal"
+                  options={{ presentation: "transparentModal" }}
+                />
+                <Stack.Screen
+                  name="(app)"
+                  
+                 
+                />
+              </Stack>
+             
            
-          </Stack> : <Slot/>}
-         
+           : 
+            
+            <Stack>
+              <Stack.Screen name="(login)" options={{ headerShown: false }} />
+              
+            </Stack>
+           
+          }
+           </KeepSessionProvider>
         </ThemeProvider>
       </SafeAreaView>
     </SafeAreaProvider>

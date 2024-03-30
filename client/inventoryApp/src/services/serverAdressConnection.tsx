@@ -1,19 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React,{useEffect, useState} from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const serverAdressConnection = () => {
-  const [serverAdress, setServerAdress] = useState<string>('')
+const serverAdressConnection = async () => {
+  const [serverAdress, setServerAdress] = useState<string | null>(null); // Initial state: null
+
   useEffect(() => {
-    const getServerAdress = async () => {
-      const response = await axios.get('https://pastebin.com/EdBLxG4p')
-      setServerAdress(response.data)
-    
+    async function fetchServerAddress() {
+      try {
+        const response = await axios.get('https://pastebin.com/raw/EdBLxG4p');
+        if (response.status == 200) {
+            setServerAdress(response.data);
+        }
+
+        
+      } catch (error) {
+        console.error('Error fetching server address:', error);
+        // Handle the error more gracefully, e.g., display an error message
+      }
     }
-    getServerAdress()
-},[])
-   return serverAdress
-}
 
-export {serverAdressConnection}
+    fetchServerAddress();
+  }, []);
 
+  // Await the response within the function
+
+};
+
+export { serverAdressConnection };

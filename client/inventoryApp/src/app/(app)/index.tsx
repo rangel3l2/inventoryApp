@@ -16,7 +16,10 @@ import { getServerUrl } from "@/src/utils/conectionServer";
 import axios, { AxiosResponse } from "axios";
 import { Place } from "@/src/model/place";
 import { useSession } from "@/src/auth/ctx";
+
 const { width, height } = Dimensions.get("window");
+
+
 export default function Home() {
   const [value, setValue] = useState<Place>();
   const route = useRouter();

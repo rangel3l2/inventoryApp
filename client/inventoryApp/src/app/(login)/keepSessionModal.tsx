@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Pressable, Text, View, StyleSheet, ActivityIndicator } from "react-native";
-import MyButton from "../../components/MyButton";
+import  MyButton  from "@/src/components/MyButton";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { FC } from "react";
 import { useSession } from "@/src/auth/ctx";
@@ -50,18 +50,21 @@ const KeepSessionModal: FC<any> = ({ route }) => {
   };
 
   const handleParentPress = () => {
-    setSession(null);
-    setKeepSession(false);
-    handleSignIn()
+    setSession(null);    
+    navigation.replace({
+      pathname: "/",
+    });
    
     // Clear session on "Parent" press
 
   };
 
-  const handleSimPress = async() => {
-    setKeepSession(true)
+  const handleSimPress = () => {
+  
     handleSignIn()
-   
+    setTimeout(() => {
+      setKeepSession(true);
+    },5)
   
     ; // Set "keepSession" to true on "Sim" press
   
