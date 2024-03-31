@@ -4,7 +4,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { useFonts } from "expo-font";
+import * as Font from 'expo-font';
 import { Slot, Stack, useNavigation } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ import Colors, { ColorScheme } from "@/src/constants/Colors";
 import { useRouter } from "expo-router";
 import { KeepSessionProvider } from "../context/keepSessionContext";
 import Loading from "../components/Loading";
+import { Fonts } from "../constants/Fonts";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -26,8 +27,8 @@ export default function RootLayout() {
     return session ? "(app)" : "(login)";
   });
 
-  const [loaded, error] = useFonts({
-    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
+  const [loaded, error] = Font.useFonts({
+    ...Fonts,
     ...FontAwesome.font,
   });
 
@@ -67,7 +68,7 @@ function RootLayoutNav({}: propsRootLayoutNav) {
 
   useEffect(() => {
     if (session) {
-      navigation.replace("/(app)/");
+      navigation.replace("/(app)/home");
     } else {
       navigation.replace("/(login)");
     }

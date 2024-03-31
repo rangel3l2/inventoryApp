@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { Place } from "../model/place";
-
+import { Fonts } from "../constants/Fonts";
 type RadioButtonProps = {
   value: string;
   item: Place;
@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
     padding: 2,
     paddingLeft: 10,
     textAlign: "center",
+    fontSize: 16,
+    fontFamily: 'RobotoRegular',
   },
   radioButtonEmpty: {
     width: '20%',

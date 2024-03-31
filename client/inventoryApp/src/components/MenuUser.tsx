@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
       flex: 1,     
       justifyContent: 'space-evenly',
       padding:10,
-      borderRadius: 15,
-     
+      borderRadius: 15,     
     },
     textForm:{
-        fontSize:20,      
+        fontSize:20,
+        fontFamily:'RobotoBold',     
 
     }
 })

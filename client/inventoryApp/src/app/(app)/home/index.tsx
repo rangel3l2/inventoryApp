@@ -17,6 +17,7 @@ import axios, { AxiosResponse } from "axios";
 import { Place } from "@/src/model/place";
 import { useSession } from "@/src/auth/ctx";
 
+import { useGetAllPlaces } from "@/src/services/placeService";
 const { width, height } = Dimensions.get("window");
 
 
@@ -26,12 +27,13 @@ export default function Home() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme ?? "light"] || Colors.light;
-  const [places, setPlaces] = useState<Promise<AxiosResponse<Place[], any>>>();
+  //const [places, setPlaces] = useState<Promise<AxiosResponse<Place[], any>>>();
   const [url, setUrl] = useState<string | undefined>("");
   const { session } = useSession();
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  
+
+ 
+  const {places, loading, refetch} = useGetAllPlaces();
   const handleSelect = (item: Place) => {
     if (places) {
       setValue(item);
@@ -41,71 +43,10 @@ export default function Home() {
       );
     }
   };
-  useEffect(() => {
-    fetchDataURL();
-  }),
-    [];
 
-  useEffect(() => {
-    fetchDataPlaces();
-  }, [url]);
-  const fetchDataURL = async () => {
-    try {
-      // Obter a lista de IPs do Pastebin
-      
-      
-      const response = await axios.get("https://pastebin.com/raw/EdBLxG4p");
-      if (response.status !== 200) {
-        throw new Error("Erro ao buscar os IPs");
-      } else {
-        if (response) {
-          setUrl(response.data);
-        }
-      }
-    } catch (error) {
-     
-      console.error("Erro a receber dados url", error);
-      throw error;
-    }
-    finally{
-      //console.log("url", url);
-    }
-   
-  };
-  const fetchDataPlaces = async () => {
 
-    if (session?.token) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.token}`,
-      };
-      try {
-    
-        if (url) {
-          const final_url = `${url}/places`;
-          const final_url_str = final_url.trim();
-          //console.log("final_url_str", final_url_str);
-          setLoading(true);
-          const response2 = await axios.get<Place | any>(final_url_str, {
-            headers,
-          });
-          if (response2.status !== 200) {
-            throw new Error("Erro ao buscar places");
-          } else {
-            setPlaces(response2.data);
-          }
-        }
-      } catch (error) {
-        
-        alert("Erro ao buscar places");
-        console.error("Erro a receber dados", error);
-        throw error;
-      } finally {
-        
-        setLoading(false)
-      }
-    }
-  };
+
+
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
@@ -117,7 +58,7 @@ export default function Home() {
         marginBottom: 10,
        
         padding: 10,}}>
-        <Text style={[styles.title, { color: themeColors.text }]}>
+        <Text style={[styles.title, { color: themeColors.text, fontFamily:'RobotoRegular' }]}>
           Selecione Local:
         </Text>
 
@@ -160,7 +101,7 @@ export default function Home() {
       renderItem={({ item }) => item.component}
       estimatedItemSize={1}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={fetchDataPlaces} />
+        <RefreshControl refreshing={refreshing} onRefresh={refetch} />
       }
     />
     {refreshing && <ActivityIndicator color={'#000000'} />}

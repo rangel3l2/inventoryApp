@@ -1,10 +1,13 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Dimensions } from 'react-native'
 import React, { FC } from 'react'
 import { Avatar, Button, Card, Text, Icon } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
-import CardContent from 'react-native-paper/lib/typescript/components/Card/CardContent';
 
+import Colors from "@/src/constants/Colors";
+import { useColorScheme } from "@/src/components/useColorScheme";
+
+const {height, width} = Dimensions.get('window')
 type PropCard = {
+  
   name?: string | null,
   title?: string
   role?: string | null
@@ -12,16 +15,22 @@ type PropCard = {
 }
 
 const Mycard : FC<PropCard> = ({name , title, role})=> {
- 
+  const colorScheme = useColorScheme()
+  const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
 
   return (
-    <Card style={styles.card}>
+    <Card style={[styles.card, name ? { borderTopLeftRadius: 12, borderTopRightRadius: 12 } : {}]}>
+
     
  
     {name ? (
   <Card.Content>
-    <View style={styles.cardContentUser}>
-      <Avatar.Icon size={40} icon="account" />
+    <View style={[styles.cardContentUser,{margin:width/10,
+     borderTopLeftRadius:12, borderTopRightRadius:12}]}>
+      <View style={{marginRight:20, backgroundColor: themeColors.background}}>
+
+      <Avatar.Icon size={60} icon="account" color={themeColors.background}  style={{backgroundColor: themeColors.primary}}/>
+      </View>
       <Text style={styles.cardTitle}>{name}</Text>
     </View>
   </Card.Content>
@@ -42,13 +51,22 @@ const Mycard : FC<PropCard> = ({name , title, role})=> {
 
 const styles = StyleSheet.create({
   card: {
-    margin: 1,
-    width: '90%',
-    backgroundColor:'#fffff0'
+    borderWidth:0,
+    margin:0,
+    padding:0,
+    width: width - 10,
+    backgroundColor:'#fffff0',
+    borderRadius: 0,
+    maxHeight: width/2,
+    shadowColor:'none',
+    shadowOpacity:0,
+    shadowRadius:0,
+
+    elevation:0,
   },
   cardContentUser :{
     flexDirection:'row',
-    gap:5,
+    
     justifyContent:'center',
     alignItems: 'center'
   },

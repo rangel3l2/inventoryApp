@@ -7,7 +7,7 @@ const index = () => {
   const { session } = useSession();
   console.log(session);
   return (
-    <>{session ? <Redirect href="/(app)/" /> : <Redirect href="/(login)/" />}</>
+    <>{session ? <Redirect href="/(app)/home" /> : <Redirect href="/(login)/" />}</>
   );
 };
 

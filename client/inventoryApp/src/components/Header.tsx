@@ -5,8 +5,8 @@ const Header = () => {
   return (
     <View style={styles.container}>
 
-      <Text style={styles.fontText}>Inventare</Text>
-      <Image style={styles.imageLogo} source={require('../../assets/images/logo.png')}/>
+      <Text style={styles.fontText}>Conta Bem</Text>
+      <Image style={styles.imageLogo} source={require('../assets/images/logo.png')}/>
 
     </View>
   )
@@ -29,7 +29,9 @@ const styles = StyleSheet.create({
         },
         
         fontText: {
-            fontSize: 40,
+            fontFamily:'RobotoBold',
+            fontSize: 50,
+            color:"#141414",
             
         },
 

@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+    borderRadius: 5,
   },
   button: {
     alignItems: "center",
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     lineHeight: 21,
-    fontWeight: "bold",
+    fontFamily:'RobotoBold',
     letterSpacing: 0.25,
   },
 });
