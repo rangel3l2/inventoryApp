@@ -531,7 +531,7 @@ const home = () => {
               {
                 <MyButton
                   typeNavigator="back"
-                  title="Adicionar Novo Item"
+                  title="Limpar Campos"
                   handlePress={() => {
                     setCanEditCodeBar(true);
                     setItemSearch("");

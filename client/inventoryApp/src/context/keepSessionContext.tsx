@@ -42,6 +42,7 @@ export function KeepSessionProvider(props: React.PropsWithChildren) {
       if (!active && !keepSession) {
         console.log('Sessão expirada');
         setSession(null);
+        setKeepSession(true);
         navigation.replace('/');
       }
     });
