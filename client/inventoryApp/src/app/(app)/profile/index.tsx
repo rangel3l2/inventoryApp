@@ -1,5 +1,5 @@
-import { View, Text, Pressable, StyleSheet, Dimensions } from "react-native";
-import React, { useEffect } from "react";
+import { View, Text, Pressable, StyleSheet, Dimensions, Modal } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useSession } from "@/src/auth/ctx";
 import { useRouter } from "expo-router";
 import MyButton from "@/src/components/MyButton";
@@ -7,6 +7,9 @@ import extractUserIdFromToken from "@/src/utils/extractDataToken";
 import Mycard from "@/src/components/Profile/Mycard";
 import CustomHeader from "@/src/components/CustomHeader";
 import Colors from "@/src/constants/Colors";
+import * as MailComposer from 'expo-mail-composer';
+
+
 import { useColorScheme } from "@/src/components/useColorScheme";
 const { width, height } = Dimensions.get("window");
 type Profile = {
@@ -17,7 +20,43 @@ const Profile = () => {
   const navigation = useRouter();
   const { signOut, session } = useSession();
   const [extractData, setExtractData] = React.useState<Profile | null>(null);
+  const [email, setEmail] = useState('rangel.silva@estudante.ifms.edu.br');
+  const  [isEditing, setIsEditing] = useState(false);
+    const mailOptions : MailComposer.MailComposerOptions = {
+      
+      recipients: [email],
+      subject: '',
+      body: 'Mensagem do email',
+    };
+  
 
+  const handleEmail=()=>{
+    setIsEditing(true);
+    MailComposer.composeAsync(mailOptions).then((e) => {
+      console.log("verficar status",e.status)
+      e.status === 'sent' && alert('Email enviado com sucesso');
+      e.status === 'cancelled' && console.log('Email cancelado');
+      e.status === 'saved' && alert('Email salvo');
+      console.log('Email enviado com sucesso');
+    }).catch((error) => {
+      alert('Erro ao enviar email')
+      console.error(error);
+    });
+  
+  }
+  
+  const handleTermsOfUse=()=>{
+    navigation.push('/(app)/profile/termsOfUse/');
+
+  }
+  const handleAboutUs=()=>{
+    navigation.push('/(app)/profile/aboutUs/');
+
+  }
+  const handlePrivacy=()=>{
+    navigation.push('/(app)/profile/privacyPolitics/');
+
+  }
   useEffect(() => {
     get_user_id();
   }, []);
@@ -47,11 +86,11 @@ const Profile = () => {
    
 
       <Mycard name={extractData?.name} role={extractData?.role} />
-      <Mycard  title="Suporte por Email"/>      
+      <Mycard email={email} setEmail={setEmail} handlePress={handleEmail}  title="Suporte por Email"/>      
       <Mycard  title="Avalie-nos"/>
-      <Mycard  title="Termos de uso"/>
-      <Mycard  title="Política de privacidade"/>
-      <Mycard  title="Sobre"/>
+      <Mycard  title="Termos de uso" handlePress={handleTermsOfUse}/>
+      <Mycard  title="Política de privacidade" handlePress={handlePrivacy}/>
+      <Mycard  title="Sobre" handlePress={handleAboutUs}/>
       <View>
       <Text style={[styles.textFooter,{color: colorText}]}>Desenvolvido por: Rangel Gomes</Text>
       </View>
