@@ -96,7 +96,7 @@ function RootLayoutNav({}: propsRootLayoutNav) {
                 />
 
                 <Stack.Screen
-                  name="(inventory)/home"
+                  name="inventory/index"
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen name="(login)" options={{ headerShown: false }} />

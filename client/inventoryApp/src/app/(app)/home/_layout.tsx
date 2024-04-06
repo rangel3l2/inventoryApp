@@ -9,6 +9,7 @@ const rootLayout=()=>{
         <Stack.Screen name='index' options={{headerShown:false}}>
 
         </Stack.Screen>
+    
         </Stack>
     )
 }

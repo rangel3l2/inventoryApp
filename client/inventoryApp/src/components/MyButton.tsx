@@ -5,6 +5,7 @@ import Colors from '../constants/Colors';
 import { useRouter } from 'expo-router';
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { color } from '@rneui/base';
 interface MyButtonProps {
   title?: string; // Optional title with default value
@@ -16,9 +17,10 @@ interface MyButtonProps {
   styleText?: any;
   iconColor?: any;
   iconFeather?:string
+  iconAwesome?:string
 }
 export default function MyButton(props : MyButtonProps) {
-  const { route , title = 'Save', style = '',styleText='', handlePress, typeNavigator, icon, iconColor, iconFeather } = props;
+  const { route , title = 'Save', style = '',styleText='', handlePress, typeNavigator, icon, iconColor, iconFeather, iconAwesome } = props;
   const colorScheme = useColorScheme()
   const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
   const navigation = useRouter()
@@ -36,6 +38,7 @@ export default function MyButton(props : MyButtonProps) {
       <Text style={[styles.text, {color: styleText?styleText:themeColors.text, },]}>{title}</Text>
       {icon?<AntDesign name={icon} size={20} color={iconColor?iconColor:themeColors.text} style={styles.icon}   />: null}
       {iconFeather?<Feather name={iconFeather as any} size={20} color={iconColor?iconColor:themeColors.text} style={styles.icon}   />: null}
+      {iconAwesome?<FontAwesome5 name={iconAwesome as any} size={20} color={iconColor?iconColor:themeColors.text} style={styles.icon}   />: null}
     </Pressable>
   );
 }

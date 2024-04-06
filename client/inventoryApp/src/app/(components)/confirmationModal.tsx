@@ -16,7 +16,8 @@ const ConfirmationModal: FC<any> = () => {
   const routesOld = useNavigation()
   const handlePress = () => {
     setTimeout(() => {
-      navigation.replace(`/(inventory)/home?nome=${nome}&&id=${id}` as any);
+      navigation.replace(`/inventory?nome=${nome}&&id=${id}` as any);
+      
     })
     
   };

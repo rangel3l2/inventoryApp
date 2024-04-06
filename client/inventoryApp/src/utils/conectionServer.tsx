@@ -1,6 +1,6 @@
 import axios,{AxiosResponse} from 'axios';
 
-interface ServerUrlResponse {
+export interface ServerUrlResponse {
     data: string; 
     success: boolean;
 }

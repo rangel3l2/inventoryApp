@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet, Dimensions, Modal } from "react-native";
+import { View, Text, Pressable, StyleSheet, Dimensions, Modal, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSession } from "@/src/auth/ctx";
 import { useRouter } from "expo-router";
@@ -32,14 +32,13 @@ const Profile = () => {
 
   const handleEmail=()=>{
     setIsEditing(true);
-    MailComposer.composeAsync(mailOptions).then((e) => {
-      console.log("verficar status",e.status)
-      e.status === 'sent' && alert('Email enviado com sucesso');
+    MailComposer.composeAsync(mailOptions).then((e) => {    
+      console.log("verficar status",e.status)      
       e.status === 'cancelled' && console.log('Email cancelado');
       e.status === 'saved' && alert('Email salvo');
       console.log('Email enviado com sucesso');
     }).catch((error) => {
-      alert('Erro ao enviar email')
+      console.log('Erro ao enviar email')
       console.error(error);
     });
   

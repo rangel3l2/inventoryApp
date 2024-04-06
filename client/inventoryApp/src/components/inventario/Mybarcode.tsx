@@ -5,6 +5,8 @@ import {
   Pressable,
   TextInput,
   useColorScheme,
+  ActivityIndicator,
+  Text
 } from "react-native";
 import React, { FC } from "react";
 import { CameraView } from "expo-camera/next";
@@ -12,6 +14,7 @@ import { AntDesign } from "@expo/vector-icons";
 import MyButton from "@/src/components/MyButton";
 import Colors from "@/src/constants/Colors";
 import { Item } from "@/src/model/item";
+import RightSideDialog from "./custom_side_diolog";
 
 const { width, height } = Dimensions.get("window");
 type Props = {
@@ -22,6 +25,7 @@ type Props = {
   item: Item;
   getPatrimonyByBarCode?: (data: string | null) => Promise<void>;
   editCodeBar?: boolean;
+  isLoadingGetPatrimony?: boolean;
 };
 const MyBarCode: FC<Props> = ({
   canUseCamera,
@@ -31,6 +35,7 @@ const MyBarCode: FC<Props> = ({
   item,
   getPatrimonyByBarCode,
   editCodeBar,
+  isLoadingGetPatrimony
 }) => {
   const colorScheme = useColorScheme() || "light";
   const theme = colorScheme === "light" ? Colors.dark : Colors.light;
@@ -39,7 +44,7 @@ const MyBarCode: FC<Props> = ({
 
   return (
     <>
-      {canUseCamera && (
+      {canUseCamera &&  (
         <CameraView
           style={styles.containerCamera}
           onBarcodeScanned={handleBarCodeScanned}
@@ -74,8 +79,15 @@ const MyBarCode: FC<Props> = ({
           enablesReturnKeyAutomatically={true}
           placeholderTextColor={theme.placeholder}
         />
-        {item.barcode && (
+        {isLoadingGetPatrimony && (
+          <RightSideDialog
+          visible= {isLoadingGetPatrimony}
+          children={'Patrimônio carregado com sucesso'}
+          />
+        )}
+        {item.barcode && !isLoadingGetPatrimony &&(
           <Pressable
+          hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
             style={{
               position: "absolute",
               top: 0,
@@ -126,5 +138,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
+  },
+  diologSuccessful:{
+    position: "absolute",
+    top: -5,
+    right: 20,
+    zIndex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 5,
   },
 });

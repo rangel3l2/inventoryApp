@@ -16,7 +16,7 @@ const ConfirmationModal: FC<any> = ({ route }) => {
 
  
   const handleParentPress = () => {
-    navigation.replace({pathname: '/(inventory)/home'})
+    navigation.replace('/(app)/home/(inventory)/home')
   };
 
 
@@ -32,7 +32,7 @@ const ConfirmationModal: FC<any> = ({ route }) => {
           {nome&&id&&<MyButton 
             icon={'close'}
             title="Fechar" 
-            route={{pathname: `/(inventory)/home?id=${id}&&nome=${nome}&&title=${title}`}}
+            route={{pathname: `/(app)/home/(inventory)/home?id=${id}&&nome=${nome}&&title=${title}`}}
             typeNavigator='replace' />}
         </View>
       </View>

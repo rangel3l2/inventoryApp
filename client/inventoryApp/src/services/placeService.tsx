@@ -19,8 +19,8 @@ const useGetAllPlaces = () => {
     }
   }, []);
   const getPlaces = async (headers: any) => {
-    const { data } = await getServerUrl();
-
+    const { data }: any = await getServerUrl();
+    typeof(data)
     const url = `${data}/places`;
 
     try {

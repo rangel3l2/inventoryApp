@@ -16,7 +16,7 @@ const ConfirmationModal: FC<any> = ({ route }) => {
 
  
   const handleParentPress = () => {
-    navigation.replace({pathname: '/(inventory)/home'})
+    navigation.replace('/inventory/')
   };
 
 
