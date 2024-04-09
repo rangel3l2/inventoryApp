@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, jwt_required
 from domain.exceptions.router_error import AuthError
-from application import commands, queries, use_cases
+from application import queries, use_cases
 from middleware import authentication
 from domain.entities.user import User
 from datetime import timedelta

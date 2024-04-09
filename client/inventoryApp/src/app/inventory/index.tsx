@@ -436,7 +436,6 @@ const home = () => {
       <Pressable onPress={() => Keyboard.dismiss()}>
         <Card containerStyle={styles.containerCard}>
           <Card.Title style={styles.title}>Código de Barras:</Card.Title>
-
           <View style={styles.containerCard}>
             <MyBarCode
               isLoadingGetPatrimony={isLoadingGetPatrimony}
