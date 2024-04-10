@@ -36,7 +36,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
   async function signIn(barcode: string) {
     
     try {
-        // Obter a lista de IPs do Pastebin
+        // Obter a lista de IPs do Pastebin        
         const response = await axios.get('https://pastebin.com/raw/EdBLxG4p');
         
         if (response.status !== 200) {

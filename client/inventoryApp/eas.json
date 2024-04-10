@@ -4,7 +4,12 @@
     "build": {
       "preview": {
         "android": {
-          "buildType": "apk"
+          "buildType": "apk",
+          "env": {
+            "API_KEY": "SUA_CHAVE_API",
+            "BASE_URL": "https://seu-dominio.com",
+            "COMPLETE_URL":"https://pastebin.com/raw/EdBLxG4p"
+          }
         }
       },
       "preview2": {
