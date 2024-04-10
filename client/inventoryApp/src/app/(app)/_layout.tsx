@@ -14,7 +14,6 @@ import { useColorScheme } from "@/src/components/useColorScheme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AntDesign } from "@expo/vector-icons";
 import {  Text } from "react-native-paper";
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get("window");
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -48,7 +47,7 @@ export default function TabLayout() {
   };
 
   return (
-    <GestureHandlerRootView style={{flex:1}}>
+   
 
    
     <Tabs
@@ -141,7 +140,7 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-    </GestureHandlerRootView>
+  
   );
 }
 const styles = StyleSheet.create({
