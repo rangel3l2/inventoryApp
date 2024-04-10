@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <View style={styles.container}>
 
-      <Text style={styles.fontText}>Conta Bem</Text>
+      <Text style={styles.fontText}>SISGRAPI</Text>
       <Image style={styles.imageLogo} source={require('../assets/images/logo.png')}/>
 
     </View>

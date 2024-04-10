@@ -33,8 +33,8 @@ export default function CustomModal(props: props) {
       const dialogStyles: ViewStyle = {
         zIndex: 1000,
         position: 'absolute',
-        minWidth: width/1.5,
-        minHeight: height / 5,
+        maxWidth: width/1.5,
+        maxHeight: height / 5,
         top: height / 2 - height / 6,
         left: '28%',
         transform: [{translateX}],

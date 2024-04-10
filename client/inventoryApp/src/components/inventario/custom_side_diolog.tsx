@@ -43,12 +43,13 @@ const RightSideDialog = ({
     position: "absolute",
     right: 0,
     top: 0,
+
     bottom: 5,
     zIndex: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    padding: width/50,
     borderRadius: 5,
     backgroundColor: theme.secundary,
   };

@@ -72,9 +72,9 @@ const home = () => {
   const [oldPatrimony, setOldPatrimony] = useState<any>("");
   const [onSelectSearchItem, setOnSelectSearchItem] = useState("");
   //modal
-  const [showModalError, setShowModalError] = useState(false)
-  const [showModalInfo, setShowModalInfo] = useState(false)
-  const [warningMessage, setWarningMessage] = useState("")
+  const [showModalError, setShowModalError] = useState(false);
+  const [showModalInfo, setShowModalInfo] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
   const [filteredNames, setFilteredNames] = useState([]);
   const [status, setStatus] = useState([] as Status[]);
   useEffect(() => {
@@ -233,15 +233,14 @@ const home = () => {
 
           setOldPatrimony(item);
           setCanEditCodeBar(false);
-        }else{
-       
+        } else {
         }
       }
     } catch (error) {
-      setShowModalError(true)
-      setWarningMessage('Erro a buscar Patrimônio')
+      setShowModalError(true);
+      setWarningMessage("Erro a buscar Patrimônio");
       setTimeout(() => {
-        setShowModalError(false)
+        setShowModalError(false);
       }, 1500);
     } finally {
       setTimeout(() => {
@@ -264,17 +263,17 @@ const home = () => {
           });
           if (response.status === 200) {
             //console.log("Property created");
-            setShowModalInfo(true)
-            setWarningMessage('Bem criado com sucesso')
+            setShowModalInfo(true);
+            setWarningMessage("Bem criado com sucesso");
             setTimeout(() => {
-              setShowModalInfo(false)
+              setShowModalInfo(false);
             }, 1500);
           }
         } catch (error) {
-          setShowModalError(true)
-          setWarningMessage('Erro a inserir Propriedade')
+          setShowModalError(true);
+          setWarningMessage("Erro a inserir Propriedade");
           setTimeout(() => {
-            setShowModalError(false)
+            setShowModalError(false);
           }, 1500);
         } finally {
           clean_item();
@@ -310,22 +309,29 @@ const home = () => {
             if (response.status === 200) {
               //console.log("Patrimony updated");
               <CustomModal
-                visible = {true}
-                title = {'Aviso'}
-                message="Patrimônio atualizado com sucesso"/>
+                visible={true}
+                title={"Aviso"}
+                message="Patrimônio atualizado com sucesso"
+              />;
             } else {
-             
             }
           }
         }
       }
     } catch (error) {
-      setShowModalError(true)
-      setWarningMessage('Erro a atualizar Patrimônio')
+      setShowModalError(true);
+      setWarningMessage("Erro a atualizar Patrimônio");
       setTimeout(() => {
-        setShowModalError(false)
+        setShowModalError(false);
       }, 1500);
     } finally {
+      //modal
+      setShowModalInfo(true);
+      setWarningMessage("Patrimônio atualizado com sucesso");
+      setTimeout(() => {
+        setShowModalInfo(false);
+      }, 1500);
+      //** */
       setCanEditCodeBar(true);
       setItemSearch("");
 
@@ -348,31 +354,29 @@ const home = () => {
         });
         if (response.status === 200) {
           //console.log("Patrimony created");
-         
-          setShowModalInfo(true)
-          setWarningMessage('Patrimônio criado com sucesso')
+
+          setShowModalInfo(true);
+          setWarningMessage("Patrimônio criado com sucesso");
           setTimeout(() => {
-            setShowModalInfo(false)
+            setShowModalInfo(false);
+          }, 1500);
+        } else {
+          setShowModalError(true);
+          setWarningMessage("Erro ao criar Patrimônio");
+          setTimeout(() => {
+            setShowModalError(false);
           }, 1500);
         }
-        else{
-          setShowModalError(true)
-          setWarningMessage('Erro ao criar Patrimônio')
-          setTimeout(() => {
-            setShowModalError(false)
-          }, 1500); 
-        }
       } catch (error) {
-        setShowModalError(true)
-        setWarningMessage('Erro a inserir Patrimônio')
+        setShowModalError(true);
+        setWarningMessage("Erro a inserir Patrimônio");
         setTimeout(() => {
-          setShowModalError(false)
+          setShowModalError(false);
         }, 1500);
       } finally {
         clean_item();
         setItemSearch("");
         setOnSelectSearchItem("");
-        
       }
     }
   };
@@ -389,44 +393,46 @@ const home = () => {
 
   const handleAdd = () => {
     if (canEditCodeBar && item.barcode && item.name) {
-      console.log('insertPatrimony')
       insertPatrimony();
     } else if (canEditCodeBar && !item.barcode && item.name) {
-      console.log( "insertProperty")
       insertProperty();
-    } else if(!canEditCodeBar && item.barcode) {
-      console.log('updatePatrimony')
+    } else if (!canEditCodeBar && item.barcode) {
       updatePatrimony();
-    }
-    else if(!item.barcode && !item.name  && item.status === 'Selecione uma opção' && !item.observation){
-      setShowModalError(true)
-      console.log('entrou' +'aqui')
-      setWarningMessage('Nenhum campo preenchido')
+    } else if (
+      !item.barcode &&
+      !item.name &&
+      item.status === "Selecione uma opção" &&
+      !item.observation
+    ) {
+      setShowModalError(true);
+      console.log("entrou" + "aqui");
+      setWarningMessage("Nenhum campo preenchido");
       setTimeout(() => {
-        setShowModalError(false)
-      }, 1500);     
-
-    }
-    else if(!item.barcode && !item.name && !item.status ){
-      setShowModalError(true)
-      setWarningMessage('Campo de observação está vazio')
+        setShowModalError(false);
+      }, 1500);
+    } else if (!item.barcode && !item.name && !item.status) {
+      setShowModalError(true);
+      setWarningMessage("Campo de observação está vazio");
       setTimeout(() => {
-        setShowModalError(false)
-      }, 1500);     
-    }
-    else if(item.barcode && !item.name && item.observation && !canEditCodeBar){
-      setShowModalError(true)
-      setWarningMessage('Status não selecionado')
+        setShowModalError(false);
+      }, 1500);
+    } else if (
+      item.barcode &&
+      !item.name &&
+      item.observation &&
+      !canEditCodeBar
+    ) {
+      setShowModalError(true);
+      setWarningMessage("Status não selecionado");
       setTimeout(() => {
-        setShowModalError(false)
-      }, 1500);     
-    }
-    else if(canEditCodeBar&&item.barcode && !item.name ){
-      setShowModalError(true)
-      setWarningMessage('Nome do item não preenchido')
+        setShowModalError(false);
+      }, 1500);
+    } else if (canEditCodeBar && item.barcode && !item.name) {
+      setShowModalError(true);
+      setWarningMessage("Nome do item não preenchido");
       setTimeout(() => {
-        setShowModalError(false)
-      }, 1500);     
+        setShowModalError(false);
+      }, 1500);
     }
   };
 
@@ -565,14 +571,20 @@ const home = () => {
                 clearButtonMode="always"
               />
             )}
-            {showModalError &&<CustomErrorModal
-              visible = {showModalError}
-              title = 'Aviso'
-              message={warningMessage}/>}
-              {showModalInfo &&<CustomModal
-              visible={showModalInfo}
-              title="Aviso"
-              message={warningMessage}/>}
+            {showModalError && (
+              <CustomErrorModal
+                visible={showModalError}
+                title="Aviso"
+                message={warningMessage}
+              />
+            )}
+            {showModalInfo && (
+              <CustomModal
+                visible={showModalInfo}
+                title="Aviso"
+                message={warningMessage}
+              />
+            )}
             <View
               style={{
                 height: width / 10,
@@ -608,6 +620,27 @@ const home = () => {
                   typeNavigator="back"
                   title="Limpar Campos"
                   handlePress={() => {
+                    if (
+      !item.barcode &&
+      !item.name &&
+      item.status === "Selecione uma opção" &&
+      !item.observation
+    ) {
+      setShowModalError(true);
+      console.log("entrou" + "aqui");
+      setWarningMessage("Nenhum campo preenchido");
+      setTimeout(() => {
+        setShowModalError(false);
+        }, 1500);
+      }else{
+          //modal
+          setShowModalInfo(true);
+          setWarningMessage("Campos limpos com sucesso");
+          setTimeout(() => {
+            setShowModalInfo(false);
+          }, 1500);
+          //** */
+      }
                     setCanEditCodeBar(true);
                     setItemSearch("");
 
@@ -619,6 +652,7 @@ const home = () => {
                       status: "Selecione uma opção",
                       observation: "",
                     });
+                  
                   }}
                   iconAwesome={"eraser"}
                 />

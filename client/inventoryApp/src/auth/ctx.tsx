@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse } from "axios";
-import { useStorageState } from "./expo-secure-storage";
-import { useRouter } from "expo-router";
-import { Session } from "../model/Session";
-import { ServerUrlResponse, getServerUrl } from "../utils/conectionServer";
+import React,{useState, useEffect} from 'react';
+import axios from 'axios';
+import { useStorageState } from './expo-secure-storage';
+import { useRouter } from 'expo-router';
+import { Session } from '../model/Session';
 
 const AuthContext = React.createContext<{
-  signIn: (
-    barcode: string
-  ) => Promise<{ success: boolean; name?: any; error?: string } | any>;
+  signIn: (barcode: string) => Promise<{ success: boolean; name?: string; error?: string }>;
   signOut: () => void;
-  session?: null | Session;
+  session?:  null | Session;
   isLoading: boolean;
   setSession: (session: Session | null) => void;
 }>({
@@ -24,42 +21,65 @@ const AuthContext = React.createContext<{
 export function useSession() {
   const value = React.useContext(AuthContext);
   if (!value) {
-    throw new Error("useSession must be wrapped in a <SessionProvider />");
+    throw new Error('useSession must be wrapped in a <SessionProvider />');
   }
   return value;
 }
 
-export function SessionProvider(props: React.PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState("session");
+export function SessionProvider(props: React.PropsWithChildren) { 
+  const [[isLoading, session], setSession] = useStorageState('session');
 
   const navigation = useRouter();
 
+  
+ 
   async function signIn(barcode: string) {
-    const response: AxiosResponse<ServerUrlResponse> = await getServerUrl();
-    const { data } : string | any= response;
-   
+    
     try {
-      // Tentar a autenticação com o IP atual
-      const response = await axios.post(`${data}/auth`, {
-        barcode,
-      });
-
-      if (response.status === 200) {
-        if (response.data.success) {
-          setSession(response.data);
-          return { success: true, name: response.data.name };
-        } else {
-          return { success: false, error: "Autenticação falhou" };
+        // Obter a lista de IPs do Pastebin
+        const response = await axios.get('https://pastebin.com/raw/EdBLxG4p');
+        
+        if (response.status !== 200) {
+            throw new Error('Erro ao buscar os IPs');
         }
-      }
+
+        const ipList = response.data.trim().split(','); // Remover espaços e dividir por vírgula
+   
+        let response2;
+
+        for (const ip of ipList) {
+            try {
+                // Tentar a autenticação com o IP atual
+                response2 = await axios.post(`${ip.trim()}/auth`, {
+                    barcode,
+                });
+
+                if (response2.status === 200) {
+                    if (response2.data.success) {
+                        setSession(response2.data);
+                        return { success: true, name: response2.data.name };
+                    } else {
+                        return { success: false, error: 'Autenticação falhou' };
+                    }
+                }
+            } catch (error) {
+                console.error('Erro na autenticação com o IP', ip, error);
+            }
+        }
+
+        return { success: false, error: 'Autenticação falhou em todos os IPs' };
     } catch (error) {
-      console.error("Erro na autenticação com o IP", data, error);
+        console.error('Erro durante a autenticação:', error);
+        return { success: false, error: 'Ocorreu um erro durante a autenticação' };
     }
-  }
-  async function signOut() {
+}
+
+
+async function signOut()  {  
+
     setSession(null);
-    navigation.replace("/(login)/");
-  }
+    navigation.replace('/(login)/');
+  };
 
   return (
     <AuthContext.Provider
@@ -69,8 +89,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
         signOut,
         session,
         isLoading,
-      }}
-    >
+
+      }}>
       {props.children}
     </AuthContext.Provider>
   );
