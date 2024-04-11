@@ -7,8 +7,10 @@ from domain.entities.user import User
 from datetime import timedelta
 
 
-api_blueprint = Blueprint('api', __name__)
-
+api_blueprint = Blueprint('api_blueprint', __name__, url_prefix='/api')
+@api_blueprint.route('/', methods=['GET'])
+def index():
+    return jsonify({'message': 'Bem-vindo ao sistema de gerenciamento de patrimônio!'})
 @api_blueprint.route('/auth', methods=['POST'])
 def authenticate():
     barcode = request.json.get('barcode')

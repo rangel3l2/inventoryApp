@@ -51,13 +51,13 @@ export function SessionProvider(props: React.PropsWithChildren) {
             try {
                 // Tentar a autenticação com o IP atual
                 response2 = await axios.post(`${ip.trim()}/auth`, {
-                    barcode,
+                    "barcode": barcode,
                 });
 
                 if (response2.status === 200) {
                     if (response2.data.success) {
                         setSession(response2.data);
-                        return { success: true, name: response2.data.name };
+                        return { success: true, name: response2.data.token };
                     } else {
                         return { success: false, error: `Autenticação falhou para o server ${ip}` };
                     }

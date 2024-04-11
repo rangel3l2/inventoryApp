@@ -1,7 +1,7 @@
 
 from domain.repositories.status_repository import StatusRepository
 from infrastructure.adapters.database_adapter import DatabaseAdapter
-from main import app
+
 from domain.repositories.place_repository import PlaceRepository
 from domain.repositories.product_repository import ProductRepository
 from domain.entities.product import Product
@@ -13,6 +13,7 @@ from domain.entities.property import Property
 def get_place_data():
     
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         place_repository = PlaceRepository(database_adapter)
         place = place_repository.get_all()
@@ -22,6 +23,7 @@ def get_place_data():
     
 def get_All_Products():
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         product_repository = ProductRepository(database_adapter)
         products = product_repository.get_all()
@@ -30,6 +32,7 @@ def get_All_Products():
         raise e
 def get_product_by_id(product_id):
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         product_repository = ProductRepository(database_adapter)
         product = product_repository.get_by_id(product_id)
@@ -39,6 +42,7 @@ def get_product_by_id(product_id):
 
 def get_product_by_name(product_name):
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         product_repository = ProductRepository(database_adapter)
         product = product_repository.get_by_name(product_name)
@@ -54,7 +58,7 @@ def get_product_by_name(product_name):
         
 def insert_product(product):
     try:
-        
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         product_repository = ProductRepository(database_adapter)
         product = Product(**product)
@@ -65,7 +69,7 @@ def insert_product(product):
     
 def update_product(product_id, product):
     try:
-    
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         product_repository = ProductRepository(database_adapter)
         product = product_repository.update(product_id, product)
@@ -79,6 +83,7 @@ def update_product(product_id, product):
     
 def insertPatrimony(patrimony):
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         patrimony_repository = PatrimonyRepository(database_adapter)         
         products_database = get_All_Products()
@@ -110,6 +115,7 @@ def insertPatrimony(patrimony):
         raise e
 def get_patrimony_by_id(patrimony_id):
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         patrimony_repository = PatrimonyRepository(database_adapter)
         patrimony = patrimony_repository.get_by_id(patrimony_id)
@@ -122,6 +128,7 @@ def get_patrimony_by_id(patrimony_id):
 def update_patrimony(patrimony_id, patrimony):
     
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         patrimony_repository = PatrimonyRepository(database_adapter)        
         product = update_product(patrimony['product_id']['id'], patrimony['product_id'])
@@ -139,6 +146,7 @@ def update_patrimony(patrimony_id, patrimony):
     
 def insert_property(property):
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         property_repository = PropertyRepository(database_adapter)   
         product = get_product_by_name(property['product_name']) 
@@ -169,6 +177,7 @@ def insert_property(property):
 
 def get_all_status():
     try:
+        from main import app
         database_adapter = DatabaseAdapter(app.config['SQLALCHEMY_DATABASE_URI'])
         status_repository = StatusRepository(database_adapter)
         status = status_repository.get_all()
