@@ -59,7 +59,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
                         setSession(response2.data);
                         return { success: true, name: response2.data.name };
                     } else {
-                        return { success: false, error: 'Autenticação falhou' };
+                        return { success: false, error: `Autenticação falhou para o server ${ip}` };
                     }
                 }
             } catch (error) {
@@ -67,7 +67,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
             }
         }
 
-        return { success: false, error: 'Autenticação falhou em todos os IPs' };
+        return { success: false, error: `Autenticação ao server ${ipList[0]} falhou` };
     } catch (error) {
         console.error('Erro durante a autenticação:', error);
         return { success: false, error: 'Ocorreu um erro durante a autenticação' };

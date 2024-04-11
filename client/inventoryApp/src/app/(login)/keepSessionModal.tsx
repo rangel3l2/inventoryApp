@@ -7,8 +7,8 @@ import { useSession } from "@/src/auth/ctx";
 import { useKeepSession } from "@/src/context/keepSessionContext";
 const KeepSessionModal: FC<any> = ({ route }) => {
 
-  const { setSession, signOut , signIn } = useSession(); // Access context values
-  const {setKeepSession } = useKeepSession(); // Access context values
+  const { setSession, signOut , signIn } = useSession(); 
+  const {setKeepSession } = useKeepSession(); 
   const params = useLocalSearchParams();
 
   const navigation = useRouter();
@@ -29,18 +29,16 @@ const KeepSessionModal: FC<any> = ({ route }) => {
         console.log(
           "Autenticação bem-sucedida. Nome de usuário:",
 
-          result.success
-          
+          result.success         
           
         );
         
         
       
       } else {
-        navigation.replace({
-          pathname: "/(login)/errorModal",
-          params: { title: "Error" },
-        });
+        navigation.replace(
+        `/(login)/errorModal?title=Error&&message=${result.error}` as any    
+        );
       }
     } catch (error) {
       console.log("Erro ao tentar fazer login com o código de barras", error);

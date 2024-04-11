@@ -11,7 +11,7 @@ const ConfirmationModal: FC<any> = ({ route }) => {
  
   const navigation = useRouter();
   const title = params.title as string;
-
+  const message = params.message as string;
  
   const handleParentPress = () => {
     navigation.replace({pathname: '/(login)/BarCodeWriting'})
@@ -24,7 +24,8 @@ const ConfirmationModal: FC<any> = ({ route }) => {
     <Pressable style={styles.container} onPress={handleParentPress}>
        {({ pressed }) => (
       <View style={styles.modal}>
-        <Text style={styles.title}>{title}</Text>      
+        <Text style={styles.title}>{title}</Text> 
+        <Text style={styles.localText}>{message}</Text>     
        <View style={{ gap: 20 }}>
         
           <MyButton 
@@ -52,9 +53,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   localText: {
-    fontSize: 25,
+    fontSize: 23,
     marginBottom: 20,
-    fontWeight: 'bold',
+    fontFamily: 'RobotoRegular',
   },
   modal: {
     alignItems: 'center',

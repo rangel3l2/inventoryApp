@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 import MyButton from '../components/MyButton';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { departamentos } from './mockedData/Departamentos';
 import { FC } from 'react';
 
 const ConfirmationModal: FC<any> = ({ route }) => {
