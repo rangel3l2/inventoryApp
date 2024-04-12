@@ -46,14 +46,19 @@ export function SessionProvider(props: React.PropsWithChildren) {
         const ipList = response.data.trim().split(','); // Remover espaços e dividir por vírgula
    
         let response2;
-
+        const header ={
+          "Content-Type": "application/json",
+        }
         for (const ip of ipList) {
             try {
                 // Tentar a autenticação com o IP atual
-                response2 = await axios.post(`${ip.trim()}/auth`, {
-                    "barcode": barcode,
+                const url = `${ip.trim()}/auth`;
+                console.log('barcode',barcode)
+                console.log("url", url)
+                response2 = await axios.post(url, {                                      
+                    barcode,
                 });
-
+                console.log(response2)
                 if (response2.status === 200) {
                     if (response2.data.success) {
                         setSession(response2.data);
@@ -62,6 +67,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
                         return { success: false, error: `Autenticação falhou para o server ${ip}` };
                     }
                 }
+                console.log("response2.status", response2.status)
+                console.log("response2.data", response2.data)
             } catch (error) {
                 console.error('Erro na autenticação com o IP', ip, error);
             }
