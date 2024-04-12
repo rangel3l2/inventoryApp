@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "SISGRAPI",    
+    "name": "SISGRAPI",
     "slug": "inventoryApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rangel3l.inventoryApp"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,10 +36,16 @@
     },
     "plugins": [
       "expo-router",
-      "expo-camera",     
-      "expo-font"
-       
-      
+      "expo-camera",
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
