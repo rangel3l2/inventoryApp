@@ -56,6 +56,10 @@ const Profile = () => {
     navigation.push('/(app)/profile/privacyPolitics/');
 
   }
+  const handleRateUs=()=>{
+    navigation.push('/(app)/profile/rateUs/');
+
+  } 
   useEffect(() => {
     get_user_id();
   }, []);
@@ -86,7 +90,7 @@ const Profile = () => {
 
       <Mycard name={extractData?.name} role={extractData?.role} />
       <Mycard email={email} setEmail={setEmail} handlePress={handleEmail}  title="Suporte por Email"/>      
-      <Mycard  title="Avalie-nos"/>
+      <Mycard  title="Avalie-nos" handlePress={handleRateUs}/>
       <Mycard  title="Termos de uso" handlePress={handleTermsOfUse}/>
       <Mycard  title="Política de privacidade" handlePress={handlePrivacy}/>
       <Mycard  title="Sobre" handlePress={handleAboutUs}/>

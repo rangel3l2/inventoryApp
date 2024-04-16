@@ -25,6 +25,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = db_secret_key_jwt  
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False  
 jwt = JWTManager(app)
+user_term_docx = 'mockedData/profileData/'
+filename_user_term = 'useTerm.docx'
+filename_about_us = 'aboutUs.docx'
+filename_privacy_policy = 'privacyPolicy.docx'
+app.config['DOCX_RELATIVE_PATH'] = user_term_docx
+app.config['USER_TERM_DOCX_FILENAME'] = filename_user_term
+app.config['ABOUT_US_DOCX_FILENAME'] = filename_about_us
+app.config['PRIVACY_POLICY_DOCX_FILENAME'] = filename_privacy_policy
 
 app.register_blueprint(routes.api_blueprint)
 

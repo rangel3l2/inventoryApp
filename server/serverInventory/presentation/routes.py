@@ -72,10 +72,13 @@ def update_product(product_id):
 @api_blueprint.route('/patrimony', methods=['POST'])
 @jwt_required()
 def create_patrimony():
-    try:
-        
+    try:        
         data = request.json
+        
         statusInsert = use_cases.insertPatrimony(data) 
+        if(statusInsert == False):
+            return jsonify({'success': False, 'error': 'Erro ao inserir patrimônio'}), 400
+        
         return jsonify({'success': statusInsert})   
     except AuthError as e:
         return jsonify({'success': False, 'error': e.message}), 401    
@@ -106,4 +109,31 @@ def get_status():
         return result
     except AuthError as e:
         return jsonify({'success': False, 'error': e.message}), 401
+
+@api_blueprint.route('/terms', methods=['GET'])
+@jwt_required()
+def get_terms():
+    try:
+        result = use_cases.get_use_term_from_docx()
+        
+        return result
+    except AuthError as e:
+        return jsonify({'success': False, 'error': e.message}), 401
     
+@api_blueprint.route('/about', methods=['GET'])
+@jwt_required()
+def get_about():
+    try:
+        result = use_cases.get_about_us_from_docx()
+        return result
+    except AuthError as e:
+        return jsonify({'success': False, 'error': e.message}), 401
+
+@api_blueprint.route('/privacy', methods=['GET'])
+@jwt_required()
+def get_privacy():
+    try:
+        result = use_cases.get_privacy_policy_from_docx()
+        return result
+    except AuthError as e:
+        return jsonify({'success': False, 'error': e.message}), 401

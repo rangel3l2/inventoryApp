@@ -18,9 +18,10 @@ interface MyButtonProps {
   iconColor?: any;
   iconFeather?:string
   iconAwesome?:string
+  disabled?: boolean;
 }
 export default function MyButton(props : MyButtonProps) {
-  const { route , title = 'Save', style = '',styleText='', handlePress, typeNavigator, icon, iconColor, iconFeather, iconAwesome } = props;
+  const { route , title = 'Save', style = '',styleText='', handlePress, typeNavigator, icon, iconColor, iconFeather, iconAwesome, disabled } = props;
   const colorScheme = useColorScheme()
   const themeColors = Colors[colorScheme ?? 'light'] || Colors.light;
   const navigation = useRouter()
@@ -34,7 +35,7 @@ export default function MyButton(props : MyButtonProps) {
   }
 
   return (
-    <Pressable  onPress={handleAll} style={[styles.button,{backgroundColor : themeColors.secundary, },style]} >
+    <Pressable  disabled={disabled ? disabled : false} onPress={handleAll} style={[styles.button,{backgroundColor : themeColors.secundary, },style]} >
       <Text style={[styles.text, {color: styleText?styleText:themeColors.text, },]}>{title}</Text>
       {icon?<AntDesign name={icon} size={20} color={iconColor?iconColor:themeColors.text} style={styles.icon}   />: null}
       {iconFeather?<Feather name={iconFeather as any} size={20} color={iconColor?iconColor:themeColors.text} style={styles.icon}   />: null}

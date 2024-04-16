@@ -15,7 +15,7 @@ entrar_e_ativar() {
 
 # Função para executar o script Python
 executar_script_python() {
-    python3 main.py  # Executa o script Python
+    flask --app main.py run --host 0.0.0.0  # Executa o script Python
 }
 
 # Entrar e ativar na primeira pasta

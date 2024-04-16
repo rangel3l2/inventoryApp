@@ -331,7 +331,7 @@ const home = () => {
       setTimeout(() => {
         setShowModalInfo(false);
       }, 1500);
-      //** */
+
       setCanEditCodeBar(true);
       setItemSearch("");
 
@@ -621,29 +621,28 @@ const home = () => {
                   title="Limpar Campos"
                   handlePress={() => {
                     if (
-      !item.barcode &&
-      !item.name &&
-      item.status === "Selecione uma opção" &&
-      !item.observation
-    ) {
-      setShowModalError(true);
-      console.log("entrou" + "aqui");
-      setWarningMessage("Nenhum campo preenchido");
-      setTimeout(() => {
-        setShowModalError(false);
-        }, 1500);
-      }else{
-          //modal
-          setShowModalInfo(true);
-          setWarningMessage("Campos limpos com sucesso");
-          setTimeout(() => {
-            setShowModalInfo(false);
-          }, 1500);
-          //** */
-      }
+                      !item.barcode &&
+                      !item.name &&
+                      item.status === "Selecione uma opção" &&
+                      !item.observation
+                    ) {
+                      setShowModalError(true);
+                      console.log("entrou" + "aqui");
+                      setWarningMessage("Nenhum campo preenchido");
+                      setTimeout(() => {
+                        setShowModalError(false);
+                      }, 1500);
+                    } else {
+                      //modal
+                      setShowModalInfo(true);
+                      setWarningMessage("Campos limpos com sucesso");
+                      setTimeout(() => {
+                        setShowModalInfo(false);
+                      }, 1500);
+                      //** */
+                    }
                     setCanEditCodeBar(true);
                     setItemSearch("");
-
                     setOnSelectSearchItem("");
                     setItem({
                       ...item,
@@ -652,7 +651,6 @@ const home = () => {
                       status: "Selecione uma opção",
                       observation: "",
                     });
-                  
                   }}
                   iconAwesome={"eraser"}
                 />

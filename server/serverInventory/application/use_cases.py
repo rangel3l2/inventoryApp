@@ -9,6 +9,9 @@ from domain.repositories.patrimony_repository import PatrimonyRepository
 from domain.entities.patrimony import Patrimony
 from domain.repositories.property_repository import PropertyRepository
 from domain.entities.property import Property
+from domain.entities.document import DocumentText
+from domain.repositories.show_text_document_repository import ShowTextDocumentRepository
+
 
 def get_place_data():
     
@@ -182,5 +185,43 @@ def get_all_status():
         status_repository = StatusRepository(database_adapter)
         status = status_repository.get_all()
         return status
+    except Exception as e:
+        raise e
+    
+def get_use_term_from_docx():
+    try:
+        from main import app
+        path_relative = app.config['DOCX_RELATIVE_PATH']
+        filename_user_term = app.config['USER_TERM_DOCX_FILENAME']
+        
+        doc = DocumentText(filename=filename_user_term, path=path_relative)
+        absolute_path = doc.get_absolute_path()
+        doc_repository = ShowTextDocumentRepository(path=absolute_path)
+        return doc_repository.get_text_from_file_docx()
+    except Exception as e:
+        raise e
+
+def get_about_us_from_docx():
+    try:
+        from main import app
+        path_relative = app.config['DOCX_RELATIVE_PATH']
+        filename_about_us = app.config['ABOUT_US_DOCX_FILENAME']
+        
+        doc = DocumentText(filename=filename_about_us, path=path_relative)
+        absolute_path = doc.get_absolute_path()
+        doc_repository = ShowTextDocumentRepository(path=absolute_path)
+        return doc_repository.get_text_from_file_docx()
+    except Exception as e:
+        raise e
+    
+def get_privacy_policy_from_docx():
+    try:
+        from main import app
+        path_relative = app.config['DOCX_RELATIVE_PATH']
+        filename_privacy_policy = app.config['PRIVACY_POLICY_DOCX_FILENAME']        
+        doc = DocumentText(filename=filename_privacy_policy, path=path_relative)
+        absolute_path = doc.get_absolute_path()
+        doc_repository = ShowTextDocumentRepository(path=absolute_path)
+        return doc_repository.get_text_from_file_docx()
     except Exception as e:
         raise e
